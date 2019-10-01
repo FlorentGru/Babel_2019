@@ -1,19 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
-project(Babel LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 11)
+project(Babel VERSION 1.0)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-file(GLOB_RECURSE SOURCE_FILES "src/*.cpp" "includes/*.hpp")
-include_directories(includes cmake)
+include(CTest)
+enable_testing()
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
 
-set(CMAKE_AUTOMOC ON)
+add_executable(Babel src/*)
+target_link_libraries(Babel ${CONAN_LIBS})
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt5 COMPONENTS Network REQUIRED)
-
-add_executable(Babel
-${SOURCE_FILES}
-)
-
-target_link_libraries(Babel PRIVATE Qt5::Widgets)
-target_link_libraries(Babel PRIVATE Qt5::Network)
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+include(CPack)
