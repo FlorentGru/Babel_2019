@@ -32,7 +32,7 @@ class client_udp : public QObject
         QUdpSocket *udpsocket;
         QTimer timer;
         QHostAddress address;
-        int port;
+        quint16 port;
 };
 
 #endif //CLIENT_UDP
