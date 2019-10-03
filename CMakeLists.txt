@@ -6,7 +6,8 @@ include(CTest)
 enable_testing()
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
-file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
+file(GLOB_RECURSE SOURCE_FILES "src/*.cpp" "includes/*.hpp")
+include_directories(includes cmake)
 
 set(CMAKE_AUTOMOC ON)
 
