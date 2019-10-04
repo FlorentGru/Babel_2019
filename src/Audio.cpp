@@ -253,9 +253,14 @@ void Audio::reset()
 {
     this->dataInput.frameIndex = 0;
     this->dataInput.recordedSamples.clear();
-
+    for (int i = 0; i < this->numSamples; i++) {
+        this->dataInput.recordedSamples.push_back(0);
+    };
     this->dataOutput.frameIndex = 0;
     this->dataOutput.recordedSamples.clear();
+    for (int i = 0; i < this->numSamples; i++) {
+        this->dataOutput.recordedSamples.push_back(0);
+    };
 }
 
 void Audio::giveData()
@@ -267,6 +272,7 @@ int main(void)
 {
     Audio port;
 
+    //Problème de RESET DE DATA
     while (1) {
         if (port.recordInput() != paNoError) {
             Pa_Terminate();
