@@ -14,6 +14,6 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     client_udp clientudp;
     clientudp.connection(argv);
-    clientudp.send_datagram(argv);
+    //clientudp.send_datagram(argv);
     return a.exec();
 }

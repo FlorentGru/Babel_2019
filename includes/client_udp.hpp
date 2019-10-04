@@ -21,12 +21,12 @@ class client_udp : public QObject
 
     public:
         void connection(char **argv);
-        void send_datagram(char **argv);
     
     signals:
 
     private slots:
         void readyRead();
+        void sendDatagram();
     
     private:
         QUdpSocket *udpsocket;
