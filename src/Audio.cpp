@@ -13,11 +13,11 @@
 Audio::Audio()
 {
     this->err = paNoError;
-    this->totalFrames = 8 * RATE;
+    this->totalFrames = 4 * RATE;
     this->data.maxFrameIndex = this->totalFrames;
     this->data.frameIndex = 0;
     this->numSamples = this->totalFrames * 2;
-    for (int i = 0; i < this->numSamples; i++ ) { 
+    for (int i = 0; i < this->numSamples; i++) {
         this->data.recordedSamples.push_back(0);
     };
     this->err = Pa_Initialize();
@@ -33,8 +33,8 @@ Audio::Audio()
     }
     this->inputParameters.channelCount = 2;
     this->inputParameters.sampleFormat = paFloat32;
-    this->inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
-    this->inputParameters.hostApiSpecificStreamInfo = NULL;
+    this->inputParameters.suggestedLatency = Pa_GetDeviceInfo(inputParameters.device)->defaultLowInputLatency;
+    this->inputParameters.hostApiSpecificStreamInfo = nullptr;
 
     this->outputParameters.device = Pa_GetDefaultOutputDevice();
     if (this->outputParameters.device == paNoDevice) {
@@ -42,16 +42,15 @@ Audio::Audio()
         Pa_Terminate();
         exit(84);
     }
-    this->data.frameIndex = 0;
     this->outputParameters.channelCount = 2;
-    this->outputParameters.sampleFormat =  paFloat32;
-    this->outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
-    this->outputParameters.hostApiSpecificStreamInfo = NULL;
+    this->outputParameters.sampleFormat = paFloat32;
+    this->outputParameters.suggestedLatency = Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
+    this->outputParameters.hostApiSpecificStreamInfo = nullptr;
 }
 
 Audio::~Audio() {}
 
-static int recordCallback(const void *inputBuffer, void *outputBuffer,
+int Audio::recordCallback(const void *inputBuffer, void *outputBuffer,
                         unsigned long framesPerBuffer,
                         const PaStreamCallbackTimeInfo* timeInfo,
                         PaStreamCallbackFlags statusFlags,
@@ -78,7 +77,7 @@ static int recordCallback(const void *inputBuffer, void *outputBuffer,
         framesToCalc = framesPerBuffer;
         finished = paContinue;
     }
-    if (inputBuffer == NULL) {
+    if (inputBuffer == nullptr) {
         for (i = 0 ; i < framesToCalc; i++) {
             *wptr++ = 0.0f;
             *wptr++ = 0.0f;
@@ -93,7 +92,7 @@ static int recordCallback(const void *inputBuffer, void *outputBuffer,
     return finished;
 }
 
-static int playCallback(const void *inputBuffer, void *outputBuffer,
+int Audio::playCallback(const void *inputBuffer, void *outputBuffer,
                         unsigned long framesPerBuffer,
                         const PaStreamCallbackTimeInfo* timeInfo,
                         PaStreamCallbackFlags statusFlags,
@@ -106,10 +105,10 @@ static int playCallback(const void *inputBuffer, void *outputBuffer,
     int finished;
     unsigned int framesLeft = data->maxFrameIndex - data->frameIndex;
 //hopla les warnings
-    // static_cast<void>(outputBuffer);
-    // static_cast<void>(timeInfo);
-    // static_cast<void>(statusFlags);
-    // static_cast<void>(userData);
+    static_cast<void>(outputBuffer);
+    static_cast<void>(timeInfo);
+    static_cast<void>(statusFlags);
+    static_cast<void>(userData);
 
     if (framesLeft < framesPerBuffer) {
         for (i = 0; i < framesLeft; i++) {
@@ -138,7 +137,7 @@ PaError Audio::recordInput()
     this->err = Pa_OpenStream(
         &this->stream,
         &this->inputParameters,
-        NULL,
+        nullptr,
         RATE,
         FRAMES,
         paClipOff,
@@ -168,7 +167,7 @@ PaError Audio::playOutput()
     this->data.frameIndex = 0;
     this->err = Pa_OpenStream(
         &this->stream,
-        NULL,
+        nullptr,
         &this->outputParameters,
         RATE,
         FRAMES,
@@ -202,17 +201,28 @@ paData Audio::getData() const
     return (this->data);
 }
 
+void Audio::reset()
+{
+    this->data.frameIndex = 0;
+    for (int i = 0; i < this->numSamples; i++) {
+        this->data.recordedSamples.push_back(0);
+    };
+}
+
 int main(void)
 {
     Audio port;
 
-    if (port.recordInput() != paNoError) {
-        Pa_Terminate();
-        return (84);
-    }
-    if (port.playOutput() != paNoError) {
-        Pa_Terminate();
-        return (84);
+    while (1) {
+        if (port.recordInput() != paNoError) {
+            Pa_Terminate();
+            return (84);
+        }
+        if (port.playOutput() != paNoError) {
+            Pa_Terminate();
+            return (84);
+        }
+        port.reset();
     }
     return (0);
 }
