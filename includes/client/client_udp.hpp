@@ -14,25 +14,26 @@
 #include <QObject>
 #include <QString>
 #include <QHostAddress>
+#include "AClientConnection.hpp"
 
-class client_udp : public QObject
+class client_udp : public QObject, AClientConnection
 {
     Q_OBJECT
 
     public:
-        void connection(char **argv);
-    
-    signals:
-
-    private slots:
-        void readyRead();
-        void sendDatagram();
-    
+        bool connection(char **) override;
     private:
         QUdpSocket *udpsocket;
         QTimer timer;
         QHostAddress address;
         quint16 port;
+    signals:
+
+    public slots:
+        // void readyRead();
+        // void sendDatagram();
+        bool sendData() const override;
+        bool retrieveData() const override;
 };
 
-#endif //CLIENT_UDP
+#endif

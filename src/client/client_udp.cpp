@@ -5,22 +5,23 @@
 ** client_udp.cpp
 */
 
-#include "client_udp.hpp"
 #include <iostream>
+#include <QCoreApplication>
+#include "client_udp.hpp"
 
-void client_udp::connection(char **argv)
+bool client_udp::connection(char **argv)
 {
     udpsocket = new QUdpSocket();
-    // port = 8888;
     address = argv[1];
     port = std::stoi(argv[2]);
     udpsocket->bind(QHostAddress(QHostAddress::AnyIPv4), port);
-    QObject::connect(udpsocket, &QAbstractSocket::readyRead, this, &client_udp::readyRead);
+    QObject::connect(udpsocket, &QAbstractSocket::readyRead, this, &client_udp::retrieveData);
     timer.start(1000);
-    QObject::connect(&timer, &QTimer::timeout, this, &client_udp::sendDatagram);
+    QObject::connect(&timer, &QTimer::timeout, this, &client_udp::sendData);
+    return (true);
 }
 
-void client_udp::readyRead()
+bool client_udp::retrieveData() const
 {
     QByteArray buffer;
     buffer.resize(int(udpsocket->pendingDatagramSize()));
@@ -32,12 +33,22 @@ void client_udp::readyRead()
     //std::cout << "Message from: " << sender.toString() << std::endl; 
     std::cout << "Message port: " << senderPort << std::endl;
     std::cout << "Message: " << buffer.toStdString() << std::endl;
+    return (true);
 }
 
-void client_udp::sendDatagram()
+bool client_udp::sendData() const
 {
     QByteArray Data;
     Data.append("Test");
     std::cout << port << std::endl;
     udpsocket->writeDatagram(Data, address, port);
+    return (true);
+}
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+    client_udp clientudp;
+    clientudp.connection(argv);
+    return a.exec();
 }
