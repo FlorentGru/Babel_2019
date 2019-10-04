@@ -27,10 +27,12 @@ public:
     Audio();
     ~Audio();
 
-    paData getData() const;
     PaError recordInput();
     PaError playOutput();
-    void reset();
+    // void reset();
+    void giveData();
+    PaError InitInput();
+    PaError InitOutput();
 
     static int recordCallback(const void *inputBuffer, void *outputBuffer,
                         unsigned long framesPerBuffer,
@@ -44,10 +46,12 @@ public:
                         void *userData);
 
 private:
-    paData data;
+    paData dataInput;
+    paData dataOutput;
     PaStreamParameters inputParameters;
     PaStreamParameters outputParameters;
-    PaStream *stream;
+    PaStream *streamInput;
+    PaStream *streamOutput;
     PaError err;
     int totalFrames;
     int numSamples;
