@@ -32,7 +32,6 @@ bool client_udp::retrieveData() const
     udpsocket->readDatagram(buffer.data(), buffer.size(), &sender, &senderPort);
     //std::cout << "Message from: " << sender.toString() << std::endl; 
     std::cout << "Message port: " << senderPort << std::endl;
-    std::cout << "Message: " << buffer.toStdString() << std::endl;
     return (true);
 }
 
