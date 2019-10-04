@@ -99,7 +99,22 @@ Audio::Audio()
     }
 }
 
-Audio::~Audio() {}
+Audio::~Audio()
+{
+    this->err = Pa_CloseStream(this->streamInput);
+    if (this->err != paNoError) {
+        std::cout << "CloseStream Input\n";
+        Pa_Terminate();
+        exit(84);
+    }
+    this->err = Pa_CloseStream(this->streamOutput);
+    if (this->err != paNoError) {
+        std::cout << "CloseStream Output\n";
+        Pa_Terminate();
+        exit(84);
+    }
+    Pa_Terminate();
+}
 
 int Audio::recordCallback(const void *inputBuffer, void *outputBuffer,
                         unsigned long framesPerBuffer,
@@ -188,7 +203,7 @@ PaError Audio::recordInput()
     this->dataInput.frameIndex = 0;
     this->err = Pa_StartStream(this->streamInput);
     if (this->err != paNoError) {
-        std::cout << "OpenStream\n";
+        std::cout << "OpenStream Input\n";
         return this->err;
     }
     std::cout << "Recording\n";
@@ -197,12 +212,12 @@ PaError Audio::recordInput()
         std::cout << "index = " << dataInput.frameIndex << std::endl;
     }
     if (this->err < 0) {
-        std::cout << "IsActiveStream\n";
+        std::cout << "IsActiveStream Input\n";
         return (this->err);
     }
-    this->err = Pa_CloseStream(this->streamInput);
+    this->err = Pa_StopStream(this->streamInput);
     if (this->err != paNoError) {
-        std::cout << "Close Stream\n";
+        std::cout << "StopStream Input";
         return (this->err);
     }
     return (paNoError);
@@ -211,10 +226,10 @@ PaError Audio::recordInput()
 PaError Audio::playOutput()
 {
     this->dataOutput.frameIndex = 0;
-    if (this->streamOutput) {
+    if (this->streamInput) {
         this->err = Pa_StartStream(this->streamOutput);
         if (this->err != paNoError) {
-            std::cout << "OpenStream\n";
+            std::cout << "OpenStream Output\n";
             return (this->err);
         }
         std::cout << "Waiting for playback to finish\n";
@@ -222,29 +237,26 @@ PaError Audio::playOutput()
             Pa_Sleep(100);
         }
         if (this->err < 0) {
-            std::cout << "IsActiveStream\n";
+            std::cout << "IsActiveStream Output\n";
             return(this->err);
         }
-        this->err = Pa_CloseStream(this->streamOutput);
+        this->err = Pa_StopStream(this->streamOutput);
         if (this->err != paNoError) {
-            std::cout << "CloseStream\n";
+            std::cout << "StopStream Output";
             return (this->err);
         }
     }
     return (paNoError);
 }
 
-// void Audio::reset()
-// {
-//     this->dataInput.frameIndex = 0;
-//     for (int i = 0; i < this->numSamples; i++) {
-//         this->dataInput.recordedSamples.push_back(0);
-//     };
-//     this->dataOutput.frameIndex = 0;
-//     for (int i = 0; i < this->numSamples; i++) {
-//         this->dataOutput.recordedSamples.push_back(0);
-//     };
-// }
+void Audio::reset()
+{
+    this->dataInput.frameIndex = 0;
+    this->dataInput.recordedSamples.clear();
+
+    this->dataOutput.frameIndex = 0;
+    this->dataOutput.recordedSamples.clear();
+}
 
 void Audio::giveData()
 {
@@ -255,16 +267,19 @@ int main(void)
 {
     Audio port;
 
-    if (port.recordInput() != paNoError) {
-        Pa_Terminate();
-        std::cout << "Input matter\n";
-        return (84);
-    }
-    port.giveData();
-    if (port.playOutput() != paNoError) {
-        Pa_Terminate();
-        std::cout << "Output matter\n";
-        return (84);
+    while (1) {
+        if (port.recordInput() != paNoError) {
+            Pa_Terminate();
+            std::cout << "Input matter\n";
+            return (84);
+        }
+        port.giveData();
+        if (port.playOutput() != paNoError) {
+            Pa_Terminate();
+            std::cout << "Output matter\n";
+            return (84);
+        }
+        port.reset();
     }
     return (0);
 }

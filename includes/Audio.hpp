@@ -29,7 +29,7 @@ public:
 
     PaError recordInput();
     PaError playOutput();
-    // void reset();
+    void reset();
     void giveData();
     PaError InitInput();
     PaError InitOutput();
