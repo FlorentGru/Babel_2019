@@ -36,6 +36,7 @@ PaError Audio::InitInput()
         &this->dataInput
     );
     if (this->err != paNoError) {
+        std::cout << "OpenStream\n";
         return (this->err);
     }
     return (paNoError);
@@ -68,6 +69,7 @@ PaError Audio::InitOutput()
         &this->dataOutput
     );
     if (this->err != paNoError) {
+        std::cout << "OpenStream\n";
         return(this->err);
     }
 
@@ -81,14 +83,17 @@ Audio::Audio()
     this->numSamples = this->totalFrames * 2;
     this->err = Pa_Initialize();
     if (this->err != paNoError) {
+        std::cout << "Initialize\n";
         Pa_Terminate();
         exit(84);
     }
     if (this->InitInput() != paNoError) {
+        std::cout << "Init Inputs\n";
         Pa_Terminate();
         exit(84);
     }
     if (this->InitOutput() != paNoError) {
+        std::cout << "Init Outputs\n";
         Pa_Terminate();
         exit(84);
     }
@@ -182,15 +187,19 @@ PaError Audio::recordInput()
 {
     this->dataInput.frameIndex = 0;
     this->err = Pa_StartStream(this->streamInput);
-    if (this->err != paNoError)
+    if (this->err != paNoError) {
+        std::cout << "OpenStream\n";
         return this->err;
+    }
     std::cout << "Recording\n";
     while ((err = Pa_IsStreamActive(this->streamInput)) == 1) {
         Pa_Sleep(1000);
         std::cout << "index = " << dataInput.frameIndex << std::endl;
     }
-    if (this->err < 0)
+    if (this->err < 0) {
+        std::cout << "IsActiveStream\n";
         return (this->err);
+    }
     this->err = Pa_CloseStream(this->streamInput);
     if (this->err != paNoError) {
         std::cout << "Close Stream\n";
@@ -204,18 +213,23 @@ PaError Audio::playOutput()
     this->dataOutput.frameIndex = 0;
     if (this->streamOutput) {
         this->err = Pa_StartStream(this->streamOutput);
-        if (this->err != paNoError)
+        if (this->err != paNoError) {
+            std::cout << "OpenStream\n";
             return (this->err);
+        }
         std::cout << "Waiting for playback to finish\n";
         while ((err = Pa_IsStreamActive(this->streamOutput)) == 1) {
             Pa_Sleep(100);
         }
-        if (this->err < 0)
+        if (this->err < 0) {
+            std::cout << "IsActiveStream\n";
             return(this->err);
+        }
         this->err = Pa_CloseStream(this->streamOutput);
-        if (this->err != paNoError)
+        if (this->err != paNoError) {
+            std::cout << "CloseStream\n";
             return (this->err);
-
+        }
     }
     return (paNoError);
 }
