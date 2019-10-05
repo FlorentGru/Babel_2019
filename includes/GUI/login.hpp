@@ -19,7 +19,6 @@
 #include <QLineEdit>
 #include "contactwindow.hpp"
 #include "registration.hpp"
-#include <boost/test/unit_test.hpp>
 
 class Login : public QWidget
 {
@@ -41,6 +40,7 @@ class Login : public QWidget
     private:
         QPushButton *login_but;
         QLabel *background;
+        QLabel *babel;
         QLabel *username_text;
         QLabel *password_text;
         QLineEdit *username;

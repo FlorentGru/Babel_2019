@@ -59,7 +59,7 @@ void registration::setLineEdit()
 
 void registration::setQpushButton()
 {
-    registe = new QPushButton("Register", this);
+    registe = new QPushButton("Create", this);
     registe->setFixedWidth(100);
     registe->setFixedHeight(40);
     registe->move(580, 440);

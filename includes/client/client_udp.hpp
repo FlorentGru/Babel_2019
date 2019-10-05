@@ -15,6 +15,7 @@
 #include <QString>
 #include <QHostAddress>
 #include "AClientConnection.hpp"
+#include "client_tcp.hpp"
 
 class client_udp : public QObject, AClientConnection
 {

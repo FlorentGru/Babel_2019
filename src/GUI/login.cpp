@@ -22,43 +22,54 @@ Login::Login() : QWidget()
 void Login::setBackground()
 {
     background = new QLabel(this);
-    background->setPixmap(QPixmap("/home/fgru/TEK3/Babel/CPP_babel_2019/rsc/Fond accueil fini.jpg"));
+    background->setPixmap(QPixmap("/home/fgru/TEK3/Babel/CPP_babel_2019/rsc/background_registration_end.png"));
 }
 
 void Login::setText()
 {
-    username = new QLineEdit(this);
-    username->setPlaceholderText("UserName");
-    username->setFixedWidth(150);
-    username->setFixedHeight(30);
-    username->move(580, 350);
+    babel = new QLabel(this);
+    babel->setText("<font color='White'>Babel");
+    QFont font_account("Comic Sans Ms", 50);
+    babel->move(550, 120);
+    babel->setFont(font_account);
+    babel->show();
 
-    password = new QLineEdit(this);
-    password->setPlaceholderText("Password");
-    password->setFixedWidth(150);
-    password->setFixedHeight(30);
-    password->move(580, 390);
+    username_text = new QLabel(this);
+    username_text->setText("<font color='White'>Username");
+    username_text->move(480, 280);
+
+    password_text = new QLabel(this);
+    password_text->setText("<font color='White'>Password");
+    password_text->move(480, 330);
 }
 
 void Login::setLineEdit()
 {
-    username_text = new QLabel(this);
-    username_text->setText("<font color='White'>Username");
-    username_text->move(500, 360);
+    username = new QLineEdit(this);
+    username->setPlaceholderText("UserName");
+    username->setFixedWidth(170);
+    username->setFixedHeight(40);
+    username->move(570, 270);
 
-    password_text = new QLabel(this);
-    password_text->setText("<font color='White'>Password");
+    password = new QLineEdit(this);
+    password->setPlaceholderText("Password");
+    password->setFixedWidth(170);
+    password->setFixedHeight(40);
     password->setEchoMode(QLineEdit::Password);
-    password_text->move(500, 395);
+    password->move(570, 320);
 }
 
 void Login::setPushButton()
 {
     login_but = new QPushButton("Login", this);
-    login_but->move(550, 440);
+    login_but->setFixedWidth(130);
+    login_but->setFixedHeight(40);
+    login_but->move(500, 390);
 
     registe = new QPushButton("Register", this);
-    registe->move(660, 440);
+    registe->setFixedWidth(130);
+    registe->setFixedHeight(40);
+    registe->move(650, 390);
 }
 
 void Login::on_pushButton_Login_clicked()
@@ -66,14 +77,14 @@ void Login::on_pushButton_Login_clicked()
     QString password_writen = password->text();
     QString username_writen = username->text();
 
-    if (username_writen == "test" && password_writen == "test") {
+    if (username_writen == "a" && password_writen == "a") {
         hide();
         contactWindow = new contactwindow();
         contactWindow->show();
     } else {
         QLabel *errormessage = new QLabel(this);
         errormessage->setText("<font color='White'>Username or Password are incorrect");
-        errormessage->move(500, 500);
+        errormessage->move(520, 500);
         errormessage->show();
     }
 }
@@ -87,9 +98,7 @@ void Login::open_registration()
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-
     Login window;
     window.show();
-
     return app.exec();
 }

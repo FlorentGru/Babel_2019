@@ -40,11 +40,14 @@ bool client_tcp::retrieveData() const
         std::cout << "server respond  :  " << yes << std::endl;
     return (true);
 }
-/*
-int main(int argc, char *argv[])
-{
-    QCoreApplication a(argc, argv);
-    client_tcp clienttcp;
-    clienttcp.connection(argv);
-    return a.exec();
-}*/
+
+// int main(int argc, char *argv[])
+// {
+//     QCoreApplication a(argc, argv);
+//     QHostAddress address;
+//     address = argv[1];
+//     quint16 port = std::stoi(argv[2]);
+//     client_tcp clienttcp;
+//     clienttcp.connection(address, port);
+//     return a.exec();
+// }
