@@ -220,6 +220,7 @@ PaError Audio::recordInput()
         std::cout << "StopStream Input";
         return (this->err);
     }
+    this->setOutputData(this->getInputData());
     return (paNoError);
 }
 
@@ -246,6 +247,7 @@ PaError Audio::playOutput()
             return (this->err);
         }
     }
+    this->reset();
     return (paNoError);
 }
 
@@ -263,29 +265,29 @@ void Audio::reset()
     };
 }
 
-void Audio::giveData()
+std::vector<float> Audio::getInputData() const
 {
-    this->dataOutput.recordedSamples = this->dataInput.recordedSamples;
+    return (this->dataInput.recordedSamples);
+}
+
+void Audio::setOutputData(std::vector<float> vect)
+{
+    this->dataOutput.recordedSamples = vect;
 }
 
 int main(void)
 {
     Audio port;
 
-    //Problème de RESET DE DATA
-    while (1) {
-        if (port.recordInput() != paNoError) {
-            Pa_Terminate();
-            std::cout << "Input matter\n";
-            return (84);
-        }
-        port.giveData();
-        if (port.playOutput() != paNoError) {
-            Pa_Terminate();
-            std::cout << "Output matter\n";
-            return (84);
-        }
-        port.reset();
+    if (port.recordInput() != paNoError) {
+        Pa_Terminate();
+        std::cout << "Input matter\n";
+        return (84);
+    }
+    if (port.playOutput() != paNoError) {
+        Pa_Terminate();
+        std::cout << "Output matter\n";
+        return (84);
     }
     return (0);
 }

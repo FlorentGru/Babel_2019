@@ -9,6 +9,7 @@
 #define _AUDIO_HPP_
 
 #include "portaudio.h"
+#include "opus.h"
 #include <vector>
 #include <iostream>
 #include <cstdio>
@@ -33,6 +34,8 @@ public:
     void giveData();
     PaError InitInput();
     PaError InitOutput();
+    std::vector<float> getInputData() const;
+    void setOutputData(std::vector<float> vect);
 
     static int recordCallback(const void *inputBuffer, void *outputBuffer,
                         unsigned long framesPerBuffer,
