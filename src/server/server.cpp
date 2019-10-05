@@ -17,7 +17,9 @@ using boost::asio::ip::tcp;
 
 connection::connection(boost::asio::io_context &iocontext) : socket_(iocontext)
 {
+    packet_ = new packet;
 }
+
 
 void connection::start()
 {
@@ -25,30 +27,51 @@ void connection::start()
     is_reading();
 }
 
-void connection::handleRead(boost::system::error_code ec, std::size_t length)
+void connection::handleRead(boost::system::error_code ec)
 {
-    if (!ec)
-        is_writting(length);
-    else
+    //int proto;
+    if (!ec) {
+        std::cout << packet_->pck.info.proto << std::endl;
+        std::cout << packet_->pck.info.pseudo << std::endl;
+        std::cout << packet_->pck.info.password << std::endl;
+        is_writting();
+        /*if (std::strcmp(packet_->info.proto, "signin\r\n") == 0)
+            action_ = "Signed in";
+        else if (std::strcmp(packet_->info.proto, "signup\r\n") == 0)
+            action_ = "Signed up";
+        else if (std::strcmp(packet_->info.proto, "addcontact\r\n") == 0)
+            action_ = "Contact added";
+        else if (std::strcmp(packet_->info.proto, "call\r\n") == 0)
+            action_ = "Calling someone";
+        else if (std::strcmp(packet_->info.proto, "hangup\r\n") == 0)
+            action_ = "Hanging up";
+        is_writting(action_.length());
+        action_ = "Unknown action\n";*/
+    } else
         delete this;
 }
 
 void connection::is_reading()
 {
-    socket_.async_read_some(boost::asio::buffer(data_, max_length), boost::bind(&connection::handleRead, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+    socket_.async_read_some(boost::asio::buffer(packet_->pck.rawData, max_length), boost::bind(&connection::handleRead, this, boost::asio::placeholders::error));
 }
 
-void connection::handleWrite(boost::system::error_code ec, std::size_t length)
+void connection::handleWrite(boost::system::error_code ec)
 {
+    action_.clear();
     if (!ec)
         is_reading();
     else
         delete this;
 }
 
-void connection::is_writting(std::size_t length)
+void connection::is_writting()
 {
-    boost::asio::async_write(socket_, boost::asio::buffer(data_, length), boost::bind(&connection::handleWrite, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+    std::string prot = "YOU LOG IN";
+    std::string pseudo = "HAS TAMER";
+    std::string pwd = "DE CES MORTS";
+    this->packet_->fill_packet(prot, pseudo, pwd);
+    boost::asio::async_write(socket_, boost::asio::buffer(packet_->pck.rawData, sizeof(packet_->pck.info)), boost::bind(&connection::handleWrite, this, boost::asio::placeholders::error));
 }
 
 tcp::socket &connection::getSocket()
@@ -63,8 +86,10 @@ server::server(boost::asio::io_context& io_context, short port) : acceptor_(io_c
 
 void server::handleAccept(connection *myConnection, boost::system::error_code ec)
 {
-    myConnection->start();
-    accepting();
+    if(!ec) {
+        myConnection->start();
+        accepting();
+    }
 }
 
 void server::accepting()
@@ -82,7 +107,7 @@ int main(int argc, char* argv[])
             return (0);
         }
         boost::asio::io_context io_context;
-        server s(io_context, 8888);
+        server s(io_context, std::stoi(argv[1]));
         io_context.run();
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << "\n";

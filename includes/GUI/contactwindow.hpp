@@ -13,7 +13,8 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QHostAddress>
-// #include "client_udp.hpp"
+#include "client_udp.hpp"
+#include <QPalette>
 
 class contactwindow : public QWidget
 {
@@ -27,13 +28,17 @@ class contactwindow : public QWidget
 
     public slots:
         void search_address();
+        void logout();
+        void add_contact();
 
     private:
     QLabel *background;
     QLineEdit *ip_address;
     QLineEdit *port;
     QPushButton *send;
-    // client_udp *clientudp;
+    QPushButton *logout_button;
+    QPushButton *add_contact_button;
+    client_udp *clientudp;
 };
 
 #endif // CONTACTWINDOW_HPP

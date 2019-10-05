@@ -15,7 +15,7 @@ class AClientConnection
 {
 protected:
 public:
-    ~AClientConnection() {};
+    ~AClientConnection();
     virtual bool connection(QHostAddress address, quint16 port) = 0;
     void disconnection();
 

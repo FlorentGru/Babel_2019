@@ -13,6 +13,7 @@
 #include <memory>
 #include <utility>
 #include <boost/asio.hpp>
+#include "packet.hpp"
 
 using boost::asio::ip::tcp;
 
@@ -22,14 +23,16 @@ class connection
         connection(boost::asio::io_context&);
         tcp::socket &getSocket();
         void start();
-        void handleRead(boost::system::error_code, std::size_t);
-        void handleWrite(boost::system::error_code, std::size_t);
+        void handleRead(boost::system::error_code);
+        void handleWrite(boost::system::error_code);
     private:
         void is_reading();
-        void is_writting(std::size_t length);
+        void is_writting();
         tcp::socket socket_;
+        packet *packet_;
         enum { max_length = 1024 };
         char data_[max_length];
+        std::string action_;
 };
 
 class server

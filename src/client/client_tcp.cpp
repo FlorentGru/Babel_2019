@@ -49,7 +49,10 @@ bool client_tcp::retrieveData() const
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+    QHostAddress address;
+    address = argv[1];
+    quint16 port = std::stoi(argv[2]);
     client_tcp clienttcp;
-    clienttcp.connection(argv);
+    clienttcp.connection(address, port);
     return a.exec();
 }

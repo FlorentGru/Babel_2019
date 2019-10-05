@@ -7,9 +7,9 @@
 
 #include "AClientConnection.hpp"
 
-// AClientConnection::~AClientConnection()
-// {
-// }
+AClientConnection::~AClientConnection()
+{
+}
 
 void AClientConnection::disconnection()
 {

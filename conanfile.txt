@@ -4,7 +4,6 @@ opus/1.2.1@bincrafters/stable
 boost/1.71.0@conan/stable
 sqlite3/3.29.0@bincrafters/stable
 bzip2/1.0.8@conan/stable
-qt/5.12.5@bincrafters/stable
 
 [generators]
 cmake
