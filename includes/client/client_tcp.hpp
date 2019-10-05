@@ -13,6 +13,7 @@
 #include <QCoreApplication>
 #include <QHostAddress>
 #include "AClientConnection.hpp"
+#include "packet.hpp"
 
 class client_tcp : public QObject, AClientConnection
 {
@@ -22,8 +23,9 @@ public:
     bool connection(char **) override;
 private:
     QTcpSocket *tcpSocket;
-    qint64 max_length;
-    std::string data_;
+    packet *packet_;
+    enum { max_length = 1024 };
+    char data_[max_length];
 signals:
 
 public slots:

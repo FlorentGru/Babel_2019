@@ -11,7 +11,7 @@
 client_tcp::client_tcp(QObject *parent) : QObject(parent)
 {
     this->tcpSocket = new QTcpSocket(this);
-    data_ = "HELLO SERVER!";
+    this->packet_ = new packet;
 
     QObject::connect(tcpSocket, &QAbstractSocket::connected, this, &client_tcp::sendData);
     QObject::connect(tcpSocket, &QAbstractSocket::readyRead, this, &client_tcp::retrieveData);
@@ -27,7 +27,11 @@ bool client_tcp::connection(char **argv)
 
 bool client_tcp::sendData() const
 {
-    if (this->tcpSocket->write(data_.c_str()) == -1)
+    std::string prot = "SIGNIN";
+    std::string pseudo = "TAMER";
+    std::string pwd = "LA GROSSE PUTE";
+    this->packet_->fill_packet(prot, pseudo, pwd);
+    if (this->tcpSocket->write(packet_->pck.rawData, sizeof(packet_->pck.info)) == -1)
         return (false);
     retrieveData();
     return(true);
@@ -35,16 +39,17 @@ bool client_tcp::sendData() const
 
 bool client_tcp::retrieveData() const
 {
-    char *yes = tcpSocket->readAll().data();
-    if (strcmp(yes, data_.c_str()) == 0)
-        std::cout << "server respond  :  " << yes << std::endl;
+    memcpy(packet_->pck.rawData, tcpSocket->readAll().data(), sizeof(packet_->pck.info));
+    std::cout << ":" << packet_->pck.info.proto << ":" << std::endl;
+    std::cout << ":" << packet_->pck.info.pseudo << ":" << std::endl;
+    std::cout << ":" << packet_->pck.info.password << ":" << std::endl;
     return (true);
 }
-/*
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     client_tcp clienttcp;
     clienttcp.connection(argv);
     return a.exec();
-}*/
+}

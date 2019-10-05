@@ -24,8 +24,8 @@ set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 
 file(GLOB_RECURSE SOURCE_CLIENT "src/client/*.cpp" "includes/client/*.hpp")
 include_directories(includes/client cmake)
-file(GLOB_RECURSE SOURCE_SERVER "src/server/*.cpp" "includes/server/*.hpp")
-include_directories(includes/server cmake)
+file(GLOB_RECURSE SOURCE_SERVER "src/client/packet.cpp" "src/server/*.cpp" "includes/client/packet.hpp" "includes/server/*.hpp")
+include_directories(includes/server includes/client cmake)
 
 add_executable(babel_client ${SOURCE_CLIENT})
 target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets Qt5::Network)
