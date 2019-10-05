@@ -20,7 +20,7 @@ class client_tcp : public QObject, AClientConnection
     Q_OBJECT
 public:
     explicit client_tcp(QObject *parent = nullptr);
-    bool connection(char **) override;
+    bool connection(QHostAddress address, quint16 port) override;
 private:
     QTcpSocket *tcpSocket;
     packet *packet_;

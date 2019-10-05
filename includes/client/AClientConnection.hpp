@@ -8,15 +8,20 @@
 #ifndef ACLIENTCONNECTION_HPP
 #define ACLIENTCONNECTION_HPP
 
+#include <QHostAddress>
+#include <QtGlobal>
+
 class AClientConnection
 {
 protected:
 public:
-    virtual ~AClientConnection() = 0;
+    ~AClientConnection() {};
+    virtual bool connection(QHostAddress address, quint16 port) = 0;
+    void disconnection();
+
+    public slots:
     virtual bool sendData() const = 0;
     virtual bool retrieveData() const = 0;
-    virtual bool connection(char **) = 0;
-    void disconnection();
 };
 
 #endif
