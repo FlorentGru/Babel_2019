@@ -19,21 +19,20 @@
 class client_udp : public QObject, AClientConnection
 {
     Q_OBJECT
-
-    public:
-        bool connection(char **) override;
-    private:
+public:
+        bool connection(QHostAddress address, quint16 port) override;
+        client_udp(){};
+        ~client_udp(){};
+private:
         QUdpSocket *udpsocket;
         QTimer timer;
-        QHostAddress address;
-        quint16 port;
-    signals:
+        QHostAddress address_class;
+        quint16 port_class;
+signals:
 
-    public slots:
-        // void readyRead();
-        // void sendDatagram();
-        bool sendData() const override;
-        bool retrieveData() const override;
+public slots:
+    bool sendData() const override;
+    bool retrieveData() const override;
 };
 
 #endif

@@ -9,12 +9,12 @@
 #include <QCoreApplication>
 #include "client_udp.hpp"
 
-bool client_udp::connection(char **argv)
+bool client_udp::connection(QHostAddress address, quint16 port)
 {
     udpsocket = new QUdpSocket();
-    address = argv[1];
-    port = std::stoi(argv[2]);
     udpsocket->bind(QHostAddress(QHostAddress::AnyIPv4), port);
+    address_class = address;
+    port_class = port;
     QObject::connect(udpsocket, &QAbstractSocket::readyRead, this, &client_udp::retrieveData);
     timer.start(1000);
     QObject::connect(&timer, &QTimer::timeout, this, &client_udp::sendData);
@@ -39,15 +39,19 @@ bool client_udp::sendData() const
 {
     QByteArray Data;
     Data.append("Test");
-    std::cout << port << std::endl;
-    udpsocket->writeDatagram(Data, address, port);
+    std::cout << port_class << std::endl;
+    udpsocket->writeDatagram(Data, address_class, port_class);
     return (true);
 }
 
-int main(int argc, char *argv[])
-{
-    QCoreApplication a(argc, argv);
-    client_udp clientudp;
-    clientudp.connection(argv);
-    return a.exec();
-}
+// int main(int argc, char *argv[])
+// {
+//     QCoreApplication a(argc, argv);
+//     QHostAddress address;
+//     address = argv[1];
+//     quint16 port = std::stoi(argv[2]);
+//     std::cout << port << std::endl;
+//     client_udp clientudp;
+//     clientudp.connection(address, port);
+//     return a.exec();
+// }

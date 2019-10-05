@@ -17,9 +17,9 @@ client_tcp::client_tcp(QObject *parent) : QObject(parent)
     QObject::connect(tcpSocket, &QAbstractSocket::readyRead, this, &client_tcp::retrieveData);
 }
 
-bool client_tcp::connection(char **argv)
+bool client_tcp::connection(QHostAddress address, quint16 port)
 {
-    this->tcpSocket->connectToHost(argv[1], std::stoi(argv[2]));
+    this->tcpSocket->connectToHost(address, port);
     if (this->tcpSocket->waitForConnected(1000) == false)
         return (false);
     return(true);
