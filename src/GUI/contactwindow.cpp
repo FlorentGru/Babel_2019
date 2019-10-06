@@ -11,15 +11,17 @@
 contactwindow::contactwindow()
 {
     setFixedSize(1280, 720);
+    setWindowTitle("Contact List");
 
     setBackground();
     setLineEdit();
     setPushButton();
+    // CreateContactList();
     clientudp = new client_udp;
 
     QObject::connect(send, SIGNAL(clicked()), this, SLOT(search_address()));
     QObject::connect(logout_button, SIGNAL(clicked()), this, SLOT(logout()));
-    QObject::connect(add_contact_button, SIGNAL(clicked()), this, SLOT(add_contactdv()));
+    QObject::connect(add_contact_button, SIGNAL(clicked()), this, SLOT(add_contact()));
 }
 
 void contactwindow::setBackground()
@@ -73,7 +75,7 @@ void contactwindow::setPushButton()
     add_contact_button->update();
     add_contact_button->setFixedWidth(80);
     add_contact_button->setFixedHeight(25);
-    add_contact_button->move(980, 20);
+    add_contact_button->move(1080, 20);
 }
 
 void contactwindow::search_address()
@@ -92,5 +94,6 @@ void contactwindow::logout()
 
 void contactwindow::add_contact()
 {
-    
+    Add_contact = new addcontact();
+    Add_contact->show();
 }

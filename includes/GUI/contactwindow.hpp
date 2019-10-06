@@ -13,8 +13,9 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QHostAddress>
-#include "client_udp.hpp"
 #include <QPalette>
+#include "client_udp.hpp"
+#include "add_contact.hpp"
 
 class contactwindow : public QWidget
 {
@@ -25,6 +26,7 @@ class contactwindow : public QWidget
     void setBackground();
     void setLineEdit();
     void setPushButton();
+    // void CreateContactList();
 
     public slots:
         void search_address();
@@ -39,6 +41,7 @@ class contactwindow : public QWidget
     QPushButton *logout_button;
     QPushButton *add_contact_button;
     client_udp *clientudp;
+    addcontact *Add_contact;
 };
 
 #endif // CONTACTWINDOW_HPP

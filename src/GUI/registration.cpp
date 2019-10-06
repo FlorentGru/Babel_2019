@@ -7,11 +7,12 @@
 
 #include "registration.hpp"
 
-registration::registration()
+registration::registration(client_tcp *Clienttcp)
 {
     setFixedSize(1280, 720);
-
+    ClientTcp = Clienttcp;
     setBackground();
+    setWindowTitle("Registration");
     setText();
     setLineEdit();
     setQpushButton();
@@ -67,5 +68,12 @@ void registration::setQpushButton()
 
 void registration::finish_registration()
 {
+    QString username_qstring = username->text();
+    QString password_qstring = password->text();
+    std::string usernameString = username_qstring.toUtf8().constData();
+    std::string passwordString = password_qstring.toUtf8().constData();
+
+    ClientTcp->SignUp(usernameString, passwordString);
+    ClientTcp->sendData();
     close();
 }

@@ -10,6 +10,7 @@
 Login::Login() : QWidget()
 {
     setFixedSize(1280, 720);
+    setWindowTitle("Login");
     setBackground();
     setText();
     setLineEdit();
@@ -18,6 +19,16 @@ Login::Login() : QWidget()
     QObject::connect(login_but, SIGNAL(clicked()), this, SLOT(on_pushButton_Login_clicked()));
     QObject::connect(registe, SIGNAL(clicked()), this, SLOT(open_registration()));
 }
+
+void Login::initClient(char *argv[])
+{
+    ClientTcp = new client_tcp;
+    QHostAddress address;
+    address = argv[1];
+    quint16 port = std::stoi(argv[2]);
+    ClientTcp->connection(address, port);
+}
+
 
 void Login::setBackground()
 {
@@ -76,29 +87,39 @@ void Login::on_pushButton_Login_clicked()
 {
     QString password_writen = password->text();
     QString username_writen = username->text();
+    std::string usernameString = username_writen.toUtf8().constData();
+    std::string passwordString = password_writen.toUtf8().constData();
 
-    if (username_writen == "a" && password_writen == "a") {
-        hide();
-        contactWindow = new contactwindow();
-        contactWindow->show();
-    } else {
+    ClientTcp->SignIn(usernameString, passwordString);
+    if (ClientTcp->sendData() == false) {
         QLabel *errormessage = new QLabel(this);
         errormessage->setText("<font color='White'>Username or Password are incorrect");
         errormessage->move(520, 500);
         errormessage->show();
+    } else {
+        close();
+        contactWindow = new contactwindow();
+        contactWindow->show();
     }
+    // if (username_writen == "a" && password_writen == "a") {
+    //     close();
+    //     contactWindow = new contactwindow();
+    //     contactWindow->show();
+    // } else {
+    // }
 }
 
 void Login::open_registration()
 {
-    Registration = new registration();
+    Registration = new registration(ClientTcp);
     Registration->show();
 }
 
-// int main(int argc, char *argv[])
-// {
-//     QApplication app(argc, argv);
-//     Login window;
-//     window.show();
-//     return app.exec();
-// }
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    Login window;
+    window.initClient(argv);
+    window.show();
+    return app.exec();
+}

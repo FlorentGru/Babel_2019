@@ -19,6 +19,7 @@
 #include <QLineEdit>
 #include "contactwindow.hpp"
 #include "registration.hpp"
+#include "client_tcp.hpp"
 
 class Login : public QWidget
 {
@@ -26,6 +27,7 @@ class Login : public QWidget
 
     public:
         Login();
+        void initClient(char**);
         void setBackground();
         void setText();
         void setLineEdit();
@@ -48,6 +50,7 @@ class Login : public QWidget
         QPushButton *registe;
         contactwindow *contactWindow;
         registration *Registration;
+        client_tcp *ClientTcp;
 };
 
 #endif //LOGIN_HPP

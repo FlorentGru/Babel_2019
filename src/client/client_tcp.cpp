@@ -17,8 +17,12 @@ client_tcp::client_tcp(QObject *parent) : QObject(parent)
     this->tcpSocket = new QTcpSocket(this);
     this->packet_ = new packet;
 
+    std::string prot = "connection";
+    std::string psd = "pseudo";
+    std::string pwd = "password";
+    packet_->fill_packet(prot, psd, pwd, login_);
     QObject::connect(tcpSocket, &QAbstractSocket::connected, this, &client_tcp::sendData);
-    QObject::connect(tcpSocket, &QAbstractSocket::readyRead, this, &client_tcp::retrieveData);
+    //QObject::connect(tcpSocket, &QAbstractSocket::readyRead, this, &client_tcp::retrieveData);
 }
 
 bool client_tcp::connection(QHostAddress address, quint16 port)
@@ -31,13 +35,16 @@ bool client_tcp::connection(QHostAddress address, quint16 port)
 
 bool client_tcp::sendData() const
 {
-    std::string prot = "signup";
-    std::string pseudo = "Michel";
-    std::string pwd = "Berger";
-    this->packet_->fill_packet(prot, pseudo, pwd, login_);
+    // std::string prot = "signup";
+    // std::string pseudo = "Michel";
+    // std::string pwd = "Berger";
+    // this->packet_->fill_packet(prot, pseudo, pwd, login_);
+    bool bl = 0;
     if (this->tcpSocket->write(packet_->pck.rawData, sizeof(packet_->pck.info)) == -1)
         return (false);
-    return (retrieveData());
+    bl = retrieveData();
+    std::cout << bl << std::endl;
+    return (bl);
 }
 
 bool client_tcp::retrieveData() const
@@ -87,13 +94,13 @@ void client_tcp::addContact(std::string pseudo, std::string ip)
     this->packet_->fill_packet(prot, psd, pwd, login_);
 }
 
-int main(int argc, char *argv[])
-{
-    QCoreApplication a(argc, argv);
-    QHostAddress address;
-    address = argv[1];
-    quint16 port = std::stoi(argv[2]);
-    client_tcp clienttcp;
-    clienttcp.connection(address, port);
-    return a.exec();
-}
+// int main(int argc, char *argv[])
+// {
+//     QCoreApplication a(argc, argv);
+//     QHostAddress address;
+//     address = argv[1];
+//     quint16 port = std::stoi(argv[2]);
+//     client_tcp clienttcp;
+//     clienttcp.connection(address, port);
+//     return a.exec();
+// }

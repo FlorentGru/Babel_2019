@@ -13,13 +13,16 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QFont>
+#include <string>
+#include <iostream>
+#include "client_tcp.hpp"
 
 class registration : public QWidget
 {
     Q_OBJECT
 
     public:
-        registration();
+        registration(client_tcp *ClientTcp);
         void setBackground();
         void setText();
         void setLineEdit();
@@ -37,6 +40,7 @@ class registration : public QWidget
         QLineEdit *username;
         QLineEdit *password;
         QPushButton *registe;
+        client_tcp *ClientTcp;
 };
 
 #endif // REGISTRATION_HPP
