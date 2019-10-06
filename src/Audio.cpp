@@ -8,8 +8,9 @@
 #include <stdio.h>
 #include <math.h>
 #include "Audio.hpp"
+#include "Opus.hpp"
 
-PaError Audio::InitInput()
+PaError Audio::initInput()
 {
     this->dataInput.frameIndex = 0;
     this->dataInput.maxFrameIndex = this->totalFrames;
@@ -42,7 +43,7 @@ PaError Audio::InitInput()
     return (paNoError);
 }
 
-PaError Audio::InitOutput()
+PaError Audio::initOutput()
 {
     this->dataOutput.maxFrameIndex = this->totalFrames;
     this->dataOutput.frameIndex = 0;
@@ -87,12 +88,12 @@ Audio::Audio()
         Pa_Terminate();
         exit(84);
     }
-    if (this->InitInput() != paNoError) {
+    if (this->initInput() != paNoError) {
         std::cout << "Init Inputs\n";
         Pa_Terminate();
         exit(84);
     }
-    if (this->InitOutput() != paNoError) {
+    if (this->initOutput() != paNoError) {
         std::cout << "Init Outputs\n";
         Pa_Terminate();
         exit(84);
@@ -207,8 +208,7 @@ PaError Audio::recordInput()
     }
     std::cout << "Recording\n";
     while ((err = Pa_IsStreamActive(this->streamInput)) == 1) {
-        Pa_Sleep(1000);
-        std::cout << "index = " << dataInput.frameIndex << std::endl;
+        // Pa_Sleep(1000);
     }
     if (this->err < 0) {
         std::cout << "IsActiveStream Input\n";
@@ -219,7 +219,8 @@ PaError Audio::recordInput()
         std::cout << "StopStream Input";
         return (this->err);
     }
-    this->setOutputData(this->getInputData());
+    // std::cout << "SIZE INPUT: " << this->dataInput.recordedSamples.size() << std::endl;
+    this->dataOutput.recordedSamples = this->dataInput.recordedSamples;
     return (paNoError);
 }
 
@@ -234,7 +235,7 @@ PaError Audio::playOutput()
         }
         std::cout << "Waiting for playback to finish\n";
         while ((err = Pa_IsStreamActive(this->streamOutput)) == 1) {
-            Pa_Sleep(100);
+            // Pa_Sleep(100);
         }
         if (this->err < 0) {
             std::cout << "IsActiveStream Output\n";
@@ -269,24 +270,51 @@ std::vector<float> Audio::getInputData() const
     return (this->dataInput.recordedSamples);
 }
 
-void Audio::setOutputData(std::vector<float> vect)
+std::vector<float> Audio::getOutputData() const
 {
-    this->dataOutput.recordedSamples = vect;
+    return (this->dataOutput.recordedSamples);
 }
 
-int main(void)
+void Audio::setOutputData(float *vect, unsigned long size)
 {
-    Audio port;
+    std::vector<float> myVect;
 
-    if (port.recordInput() != paNoError) {
-        Pa_Terminate();
-        std::cout << "Input matter\n";
-        return (84);
+    for (int i = 0; i < size; i++) {
+        myVect.push_back(vect[i]);
     }
-    if (port.playOutput() != paNoError) {
-        Pa_Terminate();
-        std::cout << "Output matter\n";
-        return (84);
-    }
-    return (0);
+    this->dataOutput.recordedSamples = myVect;
+    // std::cout << "SIZE OUTPUT: " << this->dataOutput.recordedSamples.size() <<  std::endl;
 }
+
+//Main to use PortAudio
+//Some opus functionnalities are in comments because it doesnt work
+
+// int main(void)
+// {
+//     Audio port;
+//     Opus opus;
+
+//     if (port.recordInput() != paNoError) {
+//         Pa_Terminate();
+//         std::cout << "Input matter\n";
+//         return (84);
+//     }
+//     // opus.setAudioInput(port.getInputData());
+//     // opus.encodeData();
+//     // // std::cout << "CALL DECODE\n";
+//     // opus.decodeData();
+//     // // std::cout << "DECODE DONE\n";
+//     // port.setOutputData(opus.getDecodedData(), opus.getSize());
+//     // // if (port.getInputData() == port.getOutputData()) {
+//     // //     std::cout << "MEME DATA !!!!" << std::endl;
+//     // // } else {
+//     // //     std::cout << "PAS LA MEME DATA !!" << std::endl;
+//     // // }
+//     // // std::cout << "SET DATA FOR PLAYBACK\n";
+//     if (port.playOutput() != paNoError) {
+//         Pa_Terminate();
+//         std::cout << "Output matter\n";
+//         return (84);
+//     }
+//     return (0);
+// }

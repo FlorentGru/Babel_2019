@@ -20,15 +20,19 @@
 
 class Opus {
 public:
-    Opus(std::vector<float> data);
+    Opus();
     ~Opus();
 
     bool createEncoder();
     bool createDecoder();
 
     float *getDecodedData() const;
+    unsigned char *getDataEncoded() const;
+    unsigned long getSize() const;
 
-    bool encodeData(std::vector<float> data);
+    void setAudioInput(std::vector<float> data);
+
+    bool encodeData();
     bool decodeData();
 
 private:
@@ -37,6 +41,7 @@ private:
     unsigned char *dataEncoded;
     float *dataDecoded;
     int err;
+    unsigned long size;
     std::vector<float> audioInput;
 };
 
