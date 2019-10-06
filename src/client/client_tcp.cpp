@@ -22,7 +22,7 @@ client_tcp::client_tcp(QObject *parent) : QObject(parent)
     std::string pwd = "password";
     packet_->fill_packet(prot, psd, pwd, login_);
     QObject::connect(tcpSocket, &QAbstractSocket::connected, this, &client_tcp::sendData);
-    //QObject::connect(tcpSocket, &QAbstractSocket::readyRead, this, &client_tcp::retrieveData);
+    QObject::connect(tcpSocket, &QAbstractSocket::readyRead, this, &client_tcp::retrieveData);
 }
 
 bool client_tcp::connection(QHostAddress address, quint16 port)
@@ -39,12 +39,9 @@ bool client_tcp::sendData() const
     // std::string pseudo = "Michel";
     // std::string pwd = "Berger";
     // this->packet_->fill_packet(prot, pseudo, pwd, login_);
-    bool bl = 0;
     if (this->tcpSocket->write(packet_->pck.rawData, sizeof(packet_->pck.info)) == -1)
         return (false);
-    bl = retrieveData();
-    std::cout << bl << std::endl;
-    return (bl);
+    return (true);
 }
 
 bool client_tcp::retrieveData() const

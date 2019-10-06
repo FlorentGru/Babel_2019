@@ -91,21 +91,15 @@ void Login::on_pushButton_Login_clicked()
     std::string passwordString = password_writen.toUtf8().constData();
 
     ClientTcp->SignIn(usernameString, passwordString);
-    // if (ClientTcp->sendData() == false) {
-    //     QLabel *errormessage = new QLabel(this);
-    //     errormessage->setText("<font color='White'>Username or Password are incorrect");
-    //     errormessage->move(520, 500);
-    //     errormessage->show();
-    // } else {
-    //     close();
-    //     contactWindow = new contactwindow();
-    //     contactWindow->show();
-    // }
-    if (username_writen == "a" && password_writen == "a") {
+    if (ClientTcp->sendData() == false) {
+        QLabel *errormessage = new QLabel(this);
+        errormessage->setText("<font color='White'>Username or Password are incorrect");
+        errormessage->move(520, 500);
+        errormessage->show();
+    } else {
         close();
         contactWindow = new contactwindow();
         contactWindow->show();
-    } else {
     }
 }
 

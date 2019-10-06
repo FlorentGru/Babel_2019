@@ -19,7 +19,6 @@ connection::connection(boost::asio::io_context &iocontext) : socket_(iocontext)
     existing = 0;
 }
 
-
 void connection::start()
 {
     databaseConnection();
