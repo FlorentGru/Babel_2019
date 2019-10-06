@@ -111,6 +111,8 @@ void Login::open_registration()
 
 int main(int argc, char *argv[])
 {
+    if (argc != 3)
+        return(84);
     QApplication app(argc, argv);
     Login window;
     window.initClient(argv);

@@ -35,10 +35,6 @@ bool client_tcp::connection(QHostAddress address, quint16 port)
 
 bool client_tcp::sendData() const
 {
-    // std::string prot = "signup";
-    // std::string pseudo = "Michel";
-    // std::string pwd = "Berger";
-    // this->packet_->fill_packet(prot, pseudo, pwd, login_);
     if (this->tcpSocket->write(packet_->pck.rawData, sizeof(packet_->pck.info)) == -1)
         return (false);
     return (true);
@@ -56,14 +52,11 @@ bool client_tcp::retrieveData() const
     }
     else if (std::strcmp(packet_->pck.info.proto, "signin") == 0) {
         std::cout << "innoice" << std::endl;
-        //std::strcpy(login_, packet_->pck.info.pseudo);
-        //std::cout << login_ << std::endl;
         return (true);
     } else if (std::strcmp(packet_->pck.info.proto, "addcontact") == 0){
         std::cout << "connoice" << std::endl;
         return (true);
     }
-    std::cout << "NOPE" << std::endl;
     return (false);
 }
 
@@ -90,14 +83,3 @@ void client_tcp::addContact(std::string pseudo, std::string ip)
     std::string pwd = ip;
     this->packet_->fill_packet(prot, psd, pwd, login_);
 }
-
-// int main(int argc, char *argv[])
-// {
-//     QCoreApplication a(argc, argv);
-//     QHostAddress address;
-//     address = argv[1];
-//     quint16 port = std::stoi(argv[2]);
-//     client_tcp clienttcp;
-//     clienttcp.connection(address, port);
-//     return a.exec();
-// }

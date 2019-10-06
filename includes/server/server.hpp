@@ -20,25 +20,25 @@ using boost::asio::ip::tcp;
 
 class connection
 {
-    public:
-        connection(boost::asio::io_context&);
-        tcp::socket &getSocket();
-        void start();
-        void handleRead(boost::system::error_code);
-        void handleWrite(boost::system::error_code);
-        void databaseConnection();
-        void signUpClient();
-        void signInClient();
-        void addContact();
-    private:
-        void isReading();
-        void isWritting();
-        tcp::socket socket_;
-        packet *packet_;
-        sqlite3 *db_;
-        enum { max_length = 1024 };
-        char data_[max_length];
-        std::string action_;
+public:
+    connection(boost::asio::io_context&);
+    tcp::socket &getSocket();
+    void start();
+    void handleRead(boost::system::error_code);
+    void handleWrite(boost::system::error_code);
+    void databaseConnection();
+    void signUpClient();
+    void signInClient();
+    void addContact();
+private:
+    void isReading();
+    void isWritting();
+    tcp::socket socket_;
+    packet *packet_;
+    sqlite3 *db_;
+    enum { max_length = 1024 };
+    char data_[max_length];
+    std::string action_;
 };
 
 class server

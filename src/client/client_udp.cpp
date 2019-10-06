@@ -29,8 +29,7 @@ bool client_udp::retrieveData() const
     QHostAddress sender;
     quint16 senderPort;
 
-    udpsocket->readDatagram(buffer.data(), buffer.size(), &sender, &senderPort);
-    //std::cout << "Message from: " << sender.toString() << std::endl; 
+    udpsocket->readDatagram(buffer.data(), buffer.size(), &sender, &senderPort); 
     std::cout << "Message port: " << senderPort << std::endl;
     return (true);
 }
@@ -39,20 +38,7 @@ bool client_udp::sendData() const
 {
     QByteArray Data;
     Data.append("Test");
-    std::cout << port_class << std::endl;
+    std::cout << "Utilisation du port : " << port_class << std::endl;
     udpsocket->writeDatagram(Data, address_class, port_class);
     return (true);
 }
-
-// int main(int argc, char *argv[])
-// {
-//     QCoreApplication a(argc, argv);
-//     QHostAddress address;
-//     address = argv[1];
-//     quint16 port = std::stoi(argv[2]);
-//     std::cout << port << std::endl;
-//     client_udp clientudp;
-//     clientudp.connection(address, port);
-//     client_tcp test;
-//     return a.exec();
-// }

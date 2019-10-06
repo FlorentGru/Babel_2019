@@ -32,8 +32,6 @@ class packet
             HANGUP,
             END
         };
-
-        //packet();
         Protocol protocol;
         package pck;
         void fill_packet(std::string, std::string, std::string, std::string);

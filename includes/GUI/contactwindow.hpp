@@ -24,19 +24,19 @@ class contactwindow : public QWidget
 {
     Q_OBJECT
 
-    public:
+public:
     contactwindow();
     void setBackground();
     void setLineEdit();
     void setPushButton();
-    void CreateMenu(std::string pseudo, int size);
+    void CreateMenu(std::string pseudo , int size);
 
-    public slots:
-        void search_address();
-        void logout();
-        void add_contact();
+public slots:
+    void search_address();
+    void logout();
+    void add_contact();
 
-    private:
+private:
     QLabel *background;
     QLineEdit *ip_address;
     QLineEdit *port;

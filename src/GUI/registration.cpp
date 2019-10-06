@@ -56,6 +56,7 @@ void registration::setLineEdit()
     password->setPlaceholderText("Password");
     password->setFixedWidth(260);
     password->setFixedHeight(40);
+    password->setEchoMode(QLineEdit::Password);
     password->move(500, 350);
 }
 

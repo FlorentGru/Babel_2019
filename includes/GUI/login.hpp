@@ -9,14 +9,8 @@
 #define LOGIN_HPP
 
 #include <QApplication>
-#include <QWidget>
-#include <QPushButton>
 #include <QMessageBox>
-#include <QLabel>
-#include <QGroupBox>
-#include <QComboBox>
 #include <QThread>
-#include <QLineEdit>
 #include "contactwindow.hpp"
 #include "registration.hpp"
 #include "client_tcp.hpp"
@@ -25,32 +19,32 @@ class Login : public QWidget
 {
     Q_OBJECT
 
-    public:
-        Login();
-        void initClient(char**);
-        void setBackground();
-        void setText();
-        void setLineEdit();
-        void setPushButton();
+public:
+    Login();
+    void initClient(char**);
+    void setBackground();
+    void setText();
+    void setLineEdit();
+    void setPushButton();
 
-    public slots:
-        void on_pushButton_Login_clicked();
-        void open_registration();
+public slots:
+    void on_pushButton_Login_clicked();
+    void open_registration();
 
-    signals:
+signals:
 
-    private:
-        QPushButton *login_but;
-        QLabel *background;
-        QLabel *babel;
-        QLabel *username_text;
-        QLabel *password_text;
-        QLineEdit *username;
-        QLineEdit *password;
-        QPushButton *registe;
-        contactwindow *contactWindow;
-        registration *Registration;
-        client_tcp *ClientTcp;
+private:
+    QPushButton *login_but;
+    QLabel *background;
+    QLabel *babel;
+    QLabel *username_text;
+    QLabel *password_text;
+    QLineEdit *username;
+    QLineEdit *password;
+    QPushButton *registe;
+    contactwindow *contactWindow;
+    registration *Registration;
+    client_tcp *ClientTcp;
 };
 
 #endif //LOGIN_HPP
