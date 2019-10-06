@@ -23,7 +23,7 @@ addcontact::addcontact()
 void addcontact::setBackground()
 {
     background = new QLabel(this);
-    background->setPixmap(QPixmap("/home/fgru/Pictures/Babel/Fond_contact.png"));
+    background->setPixmap(QPixmap("./rsc/Fond_contact.png"));
 }
 
 void addcontact::setLineEdit()

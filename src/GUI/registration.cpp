@@ -16,13 +16,14 @@ registration::registration(client_tcp *Clienttcp)
     setText();
     setLineEdit();
     setQpushButton();
+
     QObject::connect(registe, SIGNAL(clicked()), this, SLOT(finish_registration()));
 }
 
 void registration::setBackground()
 {
     background = new QLabel(this);
-    background->setPixmap(QPixmap("/home/fgru/TEK3/Babel/CPP_babel_2019/rsc/background_registration_end.png"));
+    background->setPixmap(QPixmap("./rsc/background_registration_end.png"));
     background->show();
 }
 

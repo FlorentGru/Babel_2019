@@ -33,7 +33,7 @@ void Login::initClient(char *argv[])
 void Login::setBackground()
 {
     background = new QLabel(this);
-    background->setPixmap(QPixmap("/home/fgru/TEK3/Babel/CPP_babel_2019/rsc/background_registration_end.png"));
+    background->setPixmap(QPixmap("./rsc/background_registration_end.png"));
 }
 
 void Login::setText()
@@ -91,22 +91,22 @@ void Login::on_pushButton_Login_clicked()
     std::string passwordString = password_writen.toUtf8().constData();
 
     ClientTcp->SignIn(usernameString, passwordString);
-    if (ClientTcp->sendData() == false) {
-        QLabel *errormessage = new QLabel(this);
-        errormessage->setText("<font color='White'>Username or Password are incorrect");
-        errormessage->move(520, 500);
-        errormessage->show();
-    } else {
-        close();
-        contactWindow = new contactwindow();
-        contactWindow->show();
-    }
-    // if (username_writen == "a" && password_writen == "a") {
+    // if (ClientTcp->sendData() == false) {
+    //     QLabel *errormessage = new QLabel(this);
+    //     errormessage->setText("<font color='White'>Username or Password are incorrect");
+    //     errormessage->move(520, 500);
+    //     errormessage->show();
+    // } else {
     //     close();
     //     contactWindow = new contactwindow();
     //     contactWindow->show();
-    // } else {
     // }
+    if (username_writen == "a" && password_writen == "a") {
+        close();
+        contactWindow = new contactwindow();
+        contactWindow->show();
+    } else {
+    }
 }
 
 void Login::open_registration()

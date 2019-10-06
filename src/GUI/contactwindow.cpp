@@ -7,6 +7,8 @@
 
 #include "contactwindow.hpp"
 #include <iostream>
+#include <QAction>
+#include <QFileDialog>
 
 contactwindow::contactwindow()
 {
@@ -16,7 +18,7 @@ contactwindow::contactwindow()
     setBackground();
     setLineEdit();
     setPushButton();
-    // CreateContactList();
+    // CreateMenu();
     clientudp = new client_udp;
 
     QObject::connect(send, SIGNAL(clicked()), this, SLOT(search_address()));
@@ -27,7 +29,7 @@ contactwindow::contactwindow()
 void contactwindow::setBackground()
 {
     background = new QLabel(this);
-    background->setPixmap(QPixmap("/home/fgru/Pictures/Babel/Fond_contact.png"));
+    background->setPixmap(QPixmap("./rsc/Fond_contact.png"));
 }
 
 void contactwindow::setLineEdit()
@@ -76,6 +78,23 @@ void contactwindow::setPushButton()
     add_contact_button->setFixedWidth(80);
     add_contact_button->setFixedHeight(25);
     add_contact_button->move(1080, 20);
+}
+
+void contactwindow::CreateMenu()
+{
+    pseudo = new QLabel("pseudo");
+    call = new QPushButton("Call");
+    delete_user = new QPushButton("Delete");
+
+    QGridLayout *gLayout = new QGridLayout;
+    gLayout->addWidget(pseudo);
+
+    gLayout->addWidget(call, 0, 0);
+    gLayout->addWidget(delete_user);
+
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addLayout(gLayout);
+    setLayout(mainLayout);
 }
 
 void contactwindow::search_address()
