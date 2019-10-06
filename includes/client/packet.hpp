@@ -18,8 +18,9 @@ class packet
                 char rawData[1024];
                 struct {
                     char proto[15];
-                    char pseudo[15];
-                    char password[20];
+                    char pseudo[20];
+                    char password[30];
+                    char login[20];
                 } info;
             };
         };
@@ -35,7 +36,7 @@ class packet
         //packet();
         Protocol protocol;
         package pck;
-        void fill_packet(std::string, std::string, std::string);
+        void fill_packet(std::string, std::string, std::string, std::string);
 };
 
 #endif

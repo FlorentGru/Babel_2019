@@ -22,11 +22,15 @@ public:
     explicit client_tcp(QObject *parent = nullptr);
     ~client_tcp(){};
     bool connection(QHostAddress address, quint16 port) override;
+    void SignIn(std::string, std::string);
+    void SignUp(std::string, std::string);
+    void addContact(std::string, std::string);
 private:
     QTcpSocket *tcpSocket;
     packet *packet_;
     enum { max_length = 1024 };
     char data_[max_length];
+    std::string login_;
 signals:
 
 public slots:

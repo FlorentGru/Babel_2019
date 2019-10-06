@@ -5,45 +5,114 @@
 ** test_boost.cpp
 */
 
-#include <cstdlib>
-#include <iostream>
-#include <memory>
-#include <utility>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include "server.hpp"
 
 using boost::asio::ip::tcp;
 
+int existing;
+
 connection::connection(boost::asio::io_context &iocontext) : socket_(iocontext)
 {
     packet_ = new packet;
+    existing = 0;
 }
 
 
 void connection::start()
 {
+    databaseConnection();
     std::cout << "started" << std::endl;
-    is_reading();
+    isReading();
+}
+
+int callback(void *NotUsed, int argc, char **argv, char **azColName)
+{
+    std::cout << argc << std::endl;
+    std::cout << existing << std::endl;
+    std::cout << argv[0] << std::endl;
+    if (argc == 0) {
+        existing = 0;
+        std::cout << "zero" << std::endl;
+    } else {
+        existing = argc;
+        std::cout << "severals" << std::endl;
+    }
+    return (0);
+}
+
+void connection::databaseConnection()
+{
+    sqlite3_open("babel.db", &db_);
+    char *error;
+
+    std::string sql = "CREATE TABLE babel(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, pseudo TEXT NOT NULL, password TEXT NOT NULL);";
+    std::string search = "SELECT pseudo FROM babel WHERE pseudo = 'admin';";
+    std::string admin = "INSERT INTO babel (pseudo, password) VALUES('admin', 'admin');";
+    std::string contacts = "CREATE TABLE contacts(id INTEGER NOT NULL, pseudo TEXT NOT NULL, ip TEXT NOT NULL);";
+
+    sqlite3_exec(this->db_, sql.c_str(), 0, 0, &error);
+    sqlite3_exec(this->db_, search.c_str(), callback, 0, &error);
+    if (existing == 0)
+        sqlite3_exec(this->db_, admin.c_str(), 0, 0, &error);
+    sqlite3_exec(this->db_, contacts.c_str(), 0, 0, &error);
+}
+
+void connection::signUpClient()
+{
+    char *error;
+    std::string sch = "SELECT pseudo FROM babel WHERE pseudo = '" + std::string(packet_->pck.info.pseudo) + "';";
+
+    sqlite3_exec(this->db_, sch.c_str(), callback, 0, &error);
+    if (existing != 0) {
+        std::string prot = "KO";
+        std::string pseudo = "PSEUDO";
+        std::string pwd = "ALREADY EXIST";
+        this->packet_->fill_packet(prot, pseudo, pwd, "");
+        return;
+    }
+    std::string add = "INSERT INTO babel (pseudo, password) VALUES('" + std::string(packet_->pck.info.pseudo) + "', '" + std::string(packet_->pck.info.password) + "');";
+    sqlite3_exec(this->db_, add.c_str(), 0, 0, &error);
+}
+
+void connection::signInClient()
+{
+    char *error;
+    std::cout << "men" << std::endl;
+    std::string sch = "SELECT pseudo FROM babel WHERE pseudo = '" + std::string(packet_->pck.info.pseudo) + "' AND password = '" + std::string(packet_->pck.info.password) + "';";
+
+    sqlite3_exec(this->db_, sch.c_str(), callback, 0, &error);
+    if (existing == 0) {
+        std::string prot = "KO: INVALID";
+        std::string pseudo = "USERNAME OR PASSWD";
+        std::string pwd = "NEED TO REGISTER BEFORE";
+        this->packet_->fill_packet(prot, pseudo, pwd, "");
+        return;
+    }
+}
+
+void connection::addContact()
+{
+
 }
 
 void connection::handleRead(boost::system::error_code ec)
 {
-    //int proto;
     if (!ec) {
         std::cout << packet_->pck.info.proto << std::endl;
         std::cout << packet_->pck.info.pseudo << std::endl;
         std::cout << packet_->pck.info.password << std::endl;
-        is_writting();
-        /*if (std::strcmp(packet_->info.proto, "signin\r\n") == 0)
-            action_ = "Signed in";
-        else if (std::strcmp(packet_->info.proto, "signup\r\n") == 0)
-            action_ = "Signed up";
-        else if (std::strcmp(packet_->info.proto, "addcontact\r\n") == 0)
-            action_ = "Contact added";
-        else if (std::strcmp(packet_->info.proto, "call\r\n") == 0)
+        if (std::strcmp(packet_->pck.info.proto, "signup") == 0)
+            signUpClient();
+        else if (std::strcmp(packet_->pck.info.proto, "signin") == 0)
+            signInClient();
+        isWritting();
+        /*else if (std::strcmp(packet_->pck.info.proto, "addcontact") == 0)
+            addContact();
+        else if (std::strcmp(packet_->pck.info.proto, "call") == 0)
             action_ = "Calling someone";
-        else if (std::strcmp(packet_->info.proto, "hangup\r\n") == 0)
+        else if (std::strcmp(packet_->pck.info.proto, "hangup") == 0)
             action_ = "Hanging up";
         is_writting(action_.length());
         action_ = "Unknown action\n";*/
@@ -51,7 +120,7 @@ void connection::handleRead(boost::system::error_code ec)
         delete this;
 }
 
-void connection::is_reading()
+void connection::isReading()
 {
     socket_.async_read_some(boost::asio::buffer(packet_->pck.rawData, max_length), boost::bind(&connection::handleRead, this, boost::asio::placeholders::error));
 }
@@ -60,17 +129,13 @@ void connection::handleWrite(boost::system::error_code ec)
 {
     action_.clear();
     if (!ec)
-        is_reading();
+        isReading();
     else
         delete this;
 }
 
-void connection::is_writting()
+void connection::isWritting()
 {
-    std::string prot = "YOU LOG IN";
-    std::string pseudo = "HAS TAMER";
-    std::string pwd = "DE CES MORTS";
-    this->packet_->fill_packet(prot, pseudo, pwd);
     boost::asio::async_write(socket_, boost::asio::buffer(packet_->pck.rawData, sizeof(packet_->pck.info)), boost::bind(&connection::handleWrite, this, boost::asio::placeholders::error));
 }
 

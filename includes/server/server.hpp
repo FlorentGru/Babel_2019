@@ -12,6 +12,7 @@
 #include <iostream>
 #include <memory>
 #include <utility>
+#include <sqlite3.h>
 #include <boost/asio.hpp>
 #include "packet.hpp"
 
@@ -25,11 +26,16 @@ class connection
         void start();
         void handleRead(boost::system::error_code);
         void handleWrite(boost::system::error_code);
+        void databaseConnection();
+        void signUpClient();
+        void signInClient();
+        void addContact();
     private:
-        void is_reading();
-        void is_writting();
+        void isReading();
+        void isWritting();
         tcp::socket socket_;
         packet *packet_;
+        sqlite3 *db_;
         enum { max_length = 1024 };
         char data_[max_length];
         std::string action_;
