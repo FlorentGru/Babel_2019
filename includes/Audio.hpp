@@ -14,6 +14,7 @@
 #include <cstdio>
 
 #define RATE            44100
+// #define RATE            48000
 #define FRAMES          512
 
 typedef struct {
@@ -30,11 +31,11 @@ public:
     PaError recordInput();
     PaError playOutput();
     void reset();
-    void giveData();
-    PaError InitInput();
-    PaError InitOutput();
+    PaError initInput();
+    PaError initOutput();
     std::vector<float> getInputData() const;
-    void setOutputData(std::vector<float> vect);
+    std::vector<float> getOutputData() const;
+    void setOutputData(float *, unsigned long);
 
     static int recordCallback(const void *inputBuffer, void *outputBuffer,
                         unsigned long framesPerBuffer,
