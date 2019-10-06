@@ -11,8 +11,8 @@
 
 PaError Audio::InitInput()
 {
-    this->dataInput.maxFrameIndex = this->totalFrames;
     this->dataInput.frameIndex = 0;
+    this->dataInput.maxFrameIndex = this->totalFrames;
     for (int i = 0; i < this->numSamples; i++) {
         this->dataInput.recordedSamples.push_back(0);
     };
@@ -200,7 +200,6 @@ int Audio::playCallback(const void *inputBuffer, void *outputBuffer,
 
 PaError Audio::recordInput()
 {
-    this->dataInput.frameIndex = 0;
     this->err = Pa_StartStream(this->streamInput);
     if (this->err != paNoError) {
         std::cout << "OpenStream Input\n";
