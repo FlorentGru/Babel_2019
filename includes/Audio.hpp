@@ -9,7 +9,6 @@
 #define _AUDIO_HPP_
 
 #include "portaudio.h"
-#include "opus.h"
 #include <vector>
 #include <iostream>
 #include <cstdio>
