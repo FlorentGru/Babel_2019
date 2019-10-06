@@ -29,15 +29,10 @@ void connection::start()
 
 int callback(void *NotUsed, int argc, char **argv, char **azColName)
 {
-    std::cout << argc << std::endl;
-    std::cout << existing << std::endl;
-    std::cout << argv[0] << std::endl;
     if (argc == 0) {
         existing = 0;
-        std::cout << "zero" << std::endl;
     } else {
         existing = argc;
-        std::cout << "severals" << std::endl;
     }
     return (0);
 }
@@ -79,7 +74,6 @@ void connection::signUpClient()
 void connection::signInClient()
 {
     char *error;
-    std::cout << "men" << std::endl;
     std::string sch = "SELECT pseudo FROM babel WHERE pseudo = '" + std::string(packet_->pck.info.pseudo) + "' AND password = '" + std::string(packet_->pck.info.password) + "';";
 
     sqlite3_exec(this->db_, sch.c_str(), callback, 0, &error);
@@ -107,15 +101,9 @@ void connection::handleRead(boost::system::error_code ec)
             signUpClient();
         else if (std::strcmp(packet_->pck.info.proto, "signin") == 0)
             signInClient();
+        //else if (std::strcmp(packet_->pck.info.proto, "addcontact") == 0)
+        //    addContact();
         isWritting();
-        /*else if (std::strcmp(packet_->pck.info.proto, "addcontact") == 0)
-            addContact();
-        else if (std::strcmp(packet_->pck.info.proto, "call") == 0)
-            action_ = "Calling someone";
-        else if (std::strcmp(packet_->pck.info.proto, "hangup") == 0)
-            action_ = "Hanging up";
-        is_writting(action_.length());
-        action_ = "Unknown action\n";*/
     } else
         delete this;
 }

@@ -18,7 +18,8 @@ contactwindow::contactwindow()
     setBackground();
     setLineEdit();
     setPushButton();
-    // CreateMenu();
+    for (int i = 0; i < 2; i++)
+        CreateMenu("Pseudo", i);
     clientudp = new client_udp;
 
     QObject::connect(send, SIGNAL(clicked()), this, SLOT(search_address()));
@@ -61,7 +62,7 @@ void contactwindow::setPushButton()
 
     logout_button = new QPushButton("Logout", this);
     QPalette pall = logout_button->palette();
-    pall.setColor(QPalette::Button, QColor(Qt::gray));
+    pall.setColor(QPalette::Button, QColor(Qt::red));
     logout_button->setAutoFillBackground(true);
     logout_button->setPalette(pall);
     logout_button->update();
@@ -71,7 +72,7 @@ void contactwindow::setPushButton()
 
     add_contact_button = new QPushButton("Add Contact", this);
     QPalette contact = add_contact_button->palette();
-    contact.setColor(QPalette::Button, QColor(Qt::gray));
+    contact.setColor(QPalette::Button, QColor(Qt::blue));
     add_contact_button->setAutoFillBackground(true);
     add_contact_button->setPalette(contact);
     add_contact_button->update();
@@ -80,21 +81,37 @@ void contactwindow::setPushButton()
     add_contact_button->move(1080, 20);
 }
 
-void contactwindow::CreateMenu()
+void contactwindow::CreateMenu(std::string pseudo, int size)
 {
-    pseudo = new QLabel("pseudo");
-    call = new QPushButton("Call");
-    delete_user = new QPushButton("Delete");
+    name = new QLabel(this);
+    call = new QPushButton("Call", this);
+    delete_user = new QPushButton("Delete", this);
+    QFont font_account("Arial", 20);
 
-    QGridLayout *gLayout = new QGridLayout;
-    gLayout->addWidget(pseudo);
+    name->setText(pseudo.c_str());
+    name->move(700, (115 * (size + 1)));
+    name->setFont(font_account);
+    name->show();
 
-    gLayout->addWidget(call, 0, 0);
-    gLayout->addWidget(delete_user);
+    QPalette pal = call->palette();
+    pal.setColor(QPalette::Button, QColor(Qt::green));
+    call->setAutoFillBackground(true);
+    call->setPalette(pal);
+    call->update();
+    call->setFixedWidth(70);
+    call->setFixedHeight(30);
+    call->move(830, (115 * (size + 1)));
 
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->addLayout(gLayout);
-    setLayout(mainLayout);
+    QPalette pall = delete_user->palette();
+    pall.setColor(QPalette::Button, QColor(Qt::red));
+    delete_user->setAutoFillBackground(true);
+    delete_user->setPalette(pall);
+    delete_user->update();
+    delete_user->setFixedWidth(70);
+    delete_user->setFixedHeight(30);
+    delete_user->move(920, (115 * (size + 1)));
+
+    QObject::connect(call, SIGNAL(clicked()), this, SLOT(search_address()));
 }
 
 void contactwindow::search_address()

@@ -29,13 +29,12 @@ class contactwindow : public QWidget
     void setBackground();
     void setLineEdit();
     void setPushButton();
-    void CreateMenu();
+    void CreateMenu(std::string pseudo, int size);
 
     public slots:
         void search_address();
         void logout();
         void add_contact();
-        // void Update(const QItemSelection &selection);
 
     private:
     QLabel *background;
@@ -50,7 +49,7 @@ class contactwindow : public QWidget
     client_udp *clientudp;
     addcontact *Add_contact;
 
-    QLabel *pseudo;
+    QLabel *name;
     QPushButton *call;
     QPushButton *delete_user;
 };
