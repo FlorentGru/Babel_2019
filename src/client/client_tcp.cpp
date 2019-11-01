@@ -12,74 +12,65 @@
 #include <cstring>
 #include "client_tcp.hpp"
 
-client_tcp::client_tcp(QObject *parent) : QObject(parent)
+client_tcp::client_tcp(QString address, int port) : address_(address), port_(port)
 {
-    this->tcpSocket = new QTcpSocket(this);
-    this->packet_ = new packet;
-
-    std::string prot = "connection";
-    std::string psd = "pseudo";
-    std::string pwd = "password";
-    packet_->fill_packet(prot, psd, pwd, login_);
-    QObject::connect(tcpSocket, &QAbstractSocket::connected, this, &client_tcp::sendData);
-    QObject::connect(tcpSocket, &QAbstractSocket::readyRead, this, &client_tcp::retrieveData);
+    tcpSocket.connectToHost(address_, port_);
+    if (tcpSocket.waitForConnected(5000) == false) {
+        std::cout << "Can't connect to server" << std::endl;
+        return;
+    }
 }
 
-bool client_tcp::connection(QHostAddress address, quint16 port)
+void client_tcp::sendData()
 {
-    this->tcpSocket->connectToHost(address, port);
-    if (this->tcpSocket->waitForConnected(1000) == false)
-        return (false);
-    return(true);
+    if (!tcpSocket.isWritable())
+        std::cout << "Can't write" << std::endl;
+    tcpSocket.write(packet_.getPacket(), 1024);
+    tcpSocket.waitForBytesWritten();
 }
 
-bool client_tcp::sendData() const
+void client_tcp::retrieveData()
 {
-    if (this->tcpSocket->write(packet_->pck.rawData, sizeof(packet_->pck.info)) == -1)
+    if (!tcpSocket.isReadable())
+        std::cout << "Can't read" << std::endl;
+    tcpSocket.waitForReadyRead();
+    packet_.fill_packet(tcpSocket.readAll().data());
+
+}
+
+packet &client_tcp::getPacket()
+{
+    return (packet_);
+}
+
+
+bool client_tcp::SignIn(std::string pseudo, std::string password)
+{
+    packet_.setProto(packet::Protocol::SIGNIN);
+    packet_.setPseudo(pseudo);
+    packet_.setPassword(password);
+    sendData();
+    packet_.clearPacket();
+    retrieveData();
+    if (packet_.getProto() == packet::Protocol::FAIL)
         return (false);
     return (true);
 }
 
-bool client_tcp::retrieveData() const
-{
-    memcpy(packet_->pck.rawData, tcpSocket->readAll().data(), sizeof(packet_->pck.info));
-    std::cout << ":" << packet_->pck.info.proto << ":" << std::endl;
-    std::cout << ":" << packet_->pck.info.pseudo << ":" << std::endl;
-    std::cout << ":" << packet_->pck.info.password << ":" << std::endl;
-    if (std::strcmp(packet_->pck.info.proto, "signup") == 0) {
-        std::cout << "upnoice" << std::endl;
-        return (true);
-    }
-    else if (std::strcmp(packet_->pck.info.proto, "signin") == 0) {
-        std::cout << "innoice" << std::endl;
-        return (true);
-    } else if (std::strcmp(packet_->pck.info.proto, "addcontact") == 0){
-        std::cout << "connoice" << std::endl;
-        return (true);
-    }
-    return (false);
-}
-
-void client_tcp::SignIn(std::string pseudo, std::string password)
-{
-    std::string prot = "signin";
-    std::string psd = pseudo;
-    std::string pwd = password;
-    this->packet_->fill_packet(prot, psd, pwd, login_);
-}
-
 void client_tcp::SignUp(std::string pseudo, std::string password)
 {
-    std::string prot = "signup";
-    std::string psd = pseudo;
-    std::string pwd = password;
-    this->packet_->fill_packet(prot, psd, pwd, login_);
+    packet_.setProto(packet::Protocol::SIGNUP);
+    packet_.setPseudo(pseudo);
+    packet_.setPassword(password);
+    sendData();
+    packet_.clearPacket();
+    retrieveData();
 }
-
+/*
 void client_tcp::addContact(std::string pseudo, std::string ip)
 {
     std::string prot = "addcontact";
     std::string psd = pseudo;
     std::string pwd = ip;
-    this->packet_->fill_packet(prot, psd, pwd, login_);
-}
+    packet_->fill_packet(prot, psd, pwd, login_);
+}*/

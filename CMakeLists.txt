@@ -11,6 +11,8 @@ enable_testing()
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 
 include(build/conanbuildinfo.cmake)
 conan_basic_setup()
@@ -20,23 +22,39 @@ find_package(Qt5 COMPONENTS Network REQUIRED)
 find_package(Qt5 COMPONENTS Gui REQUIRED)
 
 include(CPack)
+include_directories(includes/server includes/client includes/GUI)
 
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+add_executable(babel_server
+    src/server/server.cpp
+    includes/server/server.hpp
+    src/server/session.cpp
+    includes/server/session.hpp
+    src/server/database.cpp
+    includes/server/database.hpp
+    src/client/packet.cpp
+    includes/client/packet.hpp
+)
+target_link_libraries(babel_server ${CONAN_LIBS})
 
-file(GLOB_RECURSE SOURCE_SERVER "src/server/*.cpp" "includes/server/*.hpp" "includes/client/packet.hpp" "src/client/packet.cpp")
-include_directories(includes/server includes/client cmake)
-file(GLOB_RECURSE SOURCE_CLIENT "src/GUI/*.cpp" "src/client/*.cpp" "includes/GUI/*.hpp" "includes/client/*.hpp")
-include_directories(includes/client includes/GUI cmake)
+add_executable(babel_client
+    src/client/AClientConnection.cpp
+    includes/client/AClientConnection.hpp
+    src/client/client_tcp.cpp
+    includes/client/client_tcp.hpp
+    src/client/client_udp.cpp
+    includes/client/client_udp.hpp
+    src/client/packet.cpp
+    includes/client/packet.hpp
+    src/GUI/add_contact.cpp
+    includes/GUI/add_contact.hpp
+    src/GUI/contactwindow.cpp
+    includes/GUI/contactwindow.hpp
+    src/GUI/login.cpp
+    includes/GUI/login.hpp
+    src/GUI/registration.cpp
+    includes/GUI/registration.hpp
+)
+target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets Qt5::Network)
 
-# add_executable(babel_client ${SOURCE_CLIENT})
-# target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets Qt5::Network)
-
-add_executable(babel_server ${SOURCE_SERVER})
-target_link_libraries(babel_server ${CONAN_LIBS} Qt5::Widgets Qt5::Network)
-
-add_executable(babel_client ${SOURCE_CLIENT})
-target_link_libraries(babel_client ${CONAN_LIBS}  Qt5::Widgets Qt5::Network Qt5::Gui)
-
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/bin/qt.conf [Paths]\nPrefix = ${CONAN_QT_ROOT})
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/bin/qt.conf "[Paths]\nPrefix = ")
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/bin/qt.conf ${CONAN_QT_ROOT})

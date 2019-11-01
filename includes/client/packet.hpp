@@ -12,29 +12,39 @@ class packet
 {
     private:
     public:
-        struct package {
-            union
-            {
-                char rawData[1024];
-                struct {
-                    char proto[15];
-                    char pseudo[20];
-                    char password[30];
-                    char login[20];
-                } info;
-            };
-        };
         enum Protocol {
             SIGNIN,
             SIGNUP,
             ADDCONTACT,
             CALL,
             HANGUP,
-            END
+            FAIL
         };
-        Protocol protocol;
+        struct package
+        {
+            union
+            {
+                char rawData[1024];
+                struct {
+                    Protocol proto;
+                    char pseudo[20];
+                    char password[30];
+                    char login[20];
+                } info;
+            };
+        };
         package pck;
-        void fill_packet(std::string, std::string, std::string, std::string);
+        void fill_packet(char *packet);
+        void setProto(Protocol proto);
+        void setPseudo(std::string pseudo);
+        void setPassword(std::string password);
+        void setLogin(std::string login);
+        void clearPacket();
+        Protocol getProto();
+        std::string getPseudo();
+        std::string getPassword();
+        std::string getLogin();
+        char *getPacket();
 };
 
 #endif

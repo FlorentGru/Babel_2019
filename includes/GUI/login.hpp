@@ -11,6 +11,7 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QThread>
+#include <QFontDatabase>
 #include "contactwindow.hpp"
 #include "registration.hpp"
 #include "client_tcp.hpp"
@@ -20,8 +21,7 @@ class Login : public QWidget
     Q_OBJECT
 
 public:
-    Login();
-    void initClient(char**);
+    Login(QString address, int port);
     void setBackground();
     void setText();
     void setLineEdit();
@@ -44,7 +44,7 @@ private:
     QPushButton *registe;
     contactwindow *contactWindow;
     registration *Registration;
-    client_tcp *ClientTcp;
+    client_tcp ClientTcp;
 };
 
 #endif //LOGIN_HPP

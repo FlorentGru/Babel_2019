@@ -11,31 +11,27 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QCoreApplication>
-#include <QHostAddress>
-#include "AClientConnection.hpp"
+#include <QString>
 #include "packet.hpp"
 
-class client_tcp : public QObject, AClientConnection
+class client_tcp : public QObject
 {
     Q_OBJECT
 public:
-    explicit client_tcp(QObject *parent = nullptr);
+    client_tcp(QString address, int port);
     ~client_tcp(){};
-    bool connection(QHostAddress address, quint16 port) override;
-    void SignIn(std::string, std::string);
+    void sendData();
+    void retrieveData();
+    bool SignIn(std::string, std::string);
     void SignUp(std::string, std::string);
-    void addContact(std::string, std::string);
+//    void addContact(std::string, std::string);
+    packet &getPacket();
 private:
-    QTcpSocket *tcpSocket;
-    packet *packet_;
-    enum { max_length = 1024 };
-    char data_[max_length];
+    QString address_;
+    int port_;
+    QTcpSocket tcpSocket;
+    packet packet_;
     std::string login_;
-signals:
-
-public slots:
-    bool sendData() const override;
-    bool retrieveData() const override;
 };
 
 #endif

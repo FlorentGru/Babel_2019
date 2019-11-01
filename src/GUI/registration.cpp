@@ -23,7 +23,7 @@ registration::registration(client_tcp *Clienttcp)
 void registration::setBackground()
 {
     background = new QLabel(this);
-    background->setPixmap(QPixmap("./rsc/background_registration_end.png"));
+    background->setPixmap(QPixmap("../../rsc/background_registration_end.png"));
     background->show();
 }
 
@@ -76,6 +76,5 @@ void registration::finish_registration()
     std::string passwordString = password_qstring.toUtf8().constData();
 
     ClientTcp->SignUp(usernameString, passwordString);
-    ClientTcp->sendData();
     close();
 }

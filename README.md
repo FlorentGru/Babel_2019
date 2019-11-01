@@ -4,7 +4,7 @@ A Skype using different library like Qt or Port Audio
 
 ## How to compile on Linux
 
-Do the command : "mkdir build && cd build && conan install .. && cmake .. -G "Unix Makefiles" && cmake -build . && make && mv bin/babel_client ../ && mv bin/babel_server ../ && cd ..
+Do the command : "mkdir build && cd build && conan install .. && cmake .. -G "Unix Makefiles" && cmake -build . && make && cd bin"
 
 ## How to compile on Windows
 

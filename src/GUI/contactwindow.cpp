@@ -30,7 +30,7 @@ contactwindow::contactwindow()
 void contactwindow::setBackground()
 {
     background = new QLabel(this);
-    background->setPixmap(QPixmap("./rsc/Fond_contact.png"));
+    background->setPixmap(QPixmap("../../rsc/Fond_contact.png"));
 }
 
 void contactwindow::setLineEdit()

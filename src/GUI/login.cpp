@@ -7,7 +7,7 @@
 
 #include "login.hpp"
 
-Login::Login() : QWidget()
+Login::Login(QString address, int port) : QWidget(), ClientTcp(address, port)
 {
     setFixedSize(1280, 720);
     setWindowTitle("Login");
@@ -20,20 +20,10 @@ Login::Login() : QWidget()
     QObject::connect(registe, SIGNAL(clicked()), this, SLOT(open_registration()));
 }
 
-void Login::initClient(char *argv[])
-{
-    ClientTcp = new client_tcp;
-    QHostAddress address;
-    address = argv[1];
-    quint16 port = std::stoi(argv[2]);
-    ClientTcp->connection(address, port);
-}
-
-
 void Login::setBackground()
 {
     background = new QLabel(this);
-    background->setPixmap(QPixmap("./rsc/background_registration_end.png"));
+    background->setPixmap(QPixmap("../../rsc/background_registration_end.png"));
 }
 
 void Login::setText()
@@ -90,8 +80,7 @@ void Login::on_pushButton_Login_clicked()
     std::string usernameString = username_writen.toUtf8().constData();
     std::string passwordString = password_writen.toUtf8().constData();
 
-    ClientTcp->SignIn(usernameString, passwordString);
-    if (ClientTcp->sendData() == false) {
+    if (ClientTcp.SignIn(usernameString, passwordString) == false) {
         QLabel *errormessage = new QLabel(this);
         errormessage->setText("<font color='White'>Username or Password are incorrect");
         errormessage->move(520, 500);
@@ -105,17 +94,22 @@ void Login::on_pushButton_Login_clicked()
 
 void Login::open_registration()
 {
-    Registration = new registration(ClientTcp);
+    Registration = new registration(&ClientTcp);
     Registration->show();
 }
 
 int main(int argc, char *argv[])
 {
-    if (argc != 3)
-        return(84);
-    QApplication app(argc, argv);
-    Login window;
-    window.initClient(argv);
-    window.show();
-    return app.exec();
+    try {
+        if (argc != 3)
+            return(84);
+        QApplication app(argc, argv);
+        Login window(argv[1], std::atoi(argv[2]));
+        window.show();
+        return app.exec();
+    }
+    catch (std::exception& e) {
+        std::cerr << "Exception: " << e.what() << "\n";
+    }
+    return(0);
 }

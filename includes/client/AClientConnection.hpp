@@ -9,7 +9,7 @@
 #define ACLIENTCONNECTION_HPP
 
 #include <QHostAddress>
-#include <QtGlobal>
+#include <QObject>
 
 class AClientConnection
 {
