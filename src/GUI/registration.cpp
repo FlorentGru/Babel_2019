@@ -7,7 +7,7 @@
 
 #include "registration.hpp"
 
-registration::registration(client_tcp *Clienttcp)
+registration::registration(AClientTcp *Clienttcp)
 {
     setFixedSize(1280, 720);
     ClientTcp = Clienttcp;

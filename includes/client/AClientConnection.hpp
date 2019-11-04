@@ -17,7 +17,6 @@ protected:
 public:
     ~AClientConnection();
     virtual bool connection(QHostAddress address, quint16 port) = 0;
-    void disconnection();
 
     public slots:
     virtual bool sendData() const = 0;

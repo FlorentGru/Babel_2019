@@ -22,7 +22,7 @@ class registration : public QWidget
     Q_OBJECT
 
 public:
-    registration(client_tcp *ClientTcp);
+    registration(AClientTcp *ClientTcp);
     void setBackground();
     void setText();
     void setLineEdit();
@@ -40,7 +40,7 @@ private:
     QLineEdit *username;
     QLineEdit *password;
     QPushButton *registe;
-    client_tcp *ClientTcp;
+    AClientTcp *ClientTcp;
 };
 
 #endif // REGISTRATION_HPP

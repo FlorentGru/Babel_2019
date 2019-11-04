@@ -2,23 +2,24 @@
 ** EPITECH PROJECT, 2019
 ** babel_boost_test
 ** File description:
-** test_boost.hpp
+** server.hpp
 */
 
-#ifndef __TEST_BOOST__
-#define __TEST_BOOST__
+#ifndef _SERVER_HPP_
+#define _SERVER_HPP_
 
 #include "session.hpp"
+#include "AServer.hpp"
 
 using boost::asio::ip::tcp;
 
-class server
+class server: public AServer
 {
     public:
         server(boost::asio::io_context& io_context, short port);
-        void handleAccept(Session *, boost::system::error_code);
+        void accepting() override;
     private:
-        void accepting();
+        void startAccept(Session *, boost::system::error_code);
         tcp::acceptor acceptor_;
         boost::asio::io_context &io_context_;
 };

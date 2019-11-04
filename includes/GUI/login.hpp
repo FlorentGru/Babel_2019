@@ -44,7 +44,7 @@ private:
     QPushButton *registe;
     contactwindow *contactWindow;
     registration *Registration;
-    client_tcp ClientTcp;
+    AClientTcp *ClientTcp;
 };
 
 #endif //LOGIN_HPP

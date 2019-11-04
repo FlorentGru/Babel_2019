@@ -25,6 +25,8 @@ include(CPack)
 include_directories(includes/server includes/client includes/GUI)
 
 add_executable(babel_server
+    src/server/AServer.cpp
+    includes/server/AServer.hpp
     src/server/server.cpp
     includes/server/server.hpp
     src/server/session.cpp
@@ -39,6 +41,8 @@ target_link_libraries(babel_server ${CONAN_LIBS})
 add_executable(babel_client
     src/client/AClientConnection.cpp
     includes/client/AClientConnection.hpp
+    src/client/AClientTcp.cpp
+    includes/client/AClientTcp.hpp
     src/client/client_tcp.cpp
     includes/client/client_tcp.hpp
     src/client/client_udp.cpp

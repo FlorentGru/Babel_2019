@@ -12,18 +12,19 @@
 #include <QTcpSocket>
 #include <QCoreApplication>
 #include <QString>
+#include "AClientTcp.hpp"
 #include "packet.hpp"
 
-class client_tcp : public QObject
+class client_tcp : public QObject, public AClientTcp
 {
     Q_OBJECT
 public:
     client_tcp(QString address, int port);
     ~client_tcp(){};
-    void sendData();
-    void retrieveData();
-    bool SignIn(std::string, std::string);
-    void SignUp(std::string, std::string);
+    void sendData() override;
+    void retrieveData() override;
+    bool SignIn(std::string, std::string) override;
+    void SignUp(std::string, std::string) override;
 //    void addContact(std::string, std::string);
     packet &getPacket();
 private:

@@ -10,7 +10,3 @@
 AClientConnection::~AClientConnection()
 {
 }
-
-void AClientConnection::disconnection()
-{
-}

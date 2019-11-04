@@ -7,8 +7,9 @@
 
 #include "login.hpp"
 
-Login::Login(QString address, int port) : QWidget(), ClientTcp(address, port)
+Login::Login(QString address, int port) : QWidget()
 {
+    ClientTcp = new client_tcp(address, port);
     setFixedSize(1280, 720);
     setWindowTitle("Login");
     setBackground();
@@ -80,7 +81,7 @@ void Login::on_pushButton_Login_clicked()
     std::string usernameString = username_writen.toUtf8().constData();
     std::string passwordString = password_writen.toUtf8().constData();
 
-    if (ClientTcp.SignIn(usernameString, passwordString) == false) {
+    if (ClientTcp->SignIn(usernameString, passwordString) == false) {
         QLabel *errormessage = new QLabel(this);
         errormessage->setText("<font color='White'>Username or Password are incorrect");
         errormessage->move(520, 500);
@@ -94,7 +95,7 @@ void Login::on_pushButton_Login_clicked()
 
 void Login::open_registration()
 {
-    Registration = new registration(&ClientTcp);
+    Registration = new registration(ClientTcp);
     Registration->show();
 }
 
