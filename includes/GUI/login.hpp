@@ -15,17 +15,18 @@
 #include "contactwindow.hpp"
 #include "registration.hpp"
 #include "client_tcp.hpp"
+#include "AGui.hpp"
 
-class Login : public QWidget
+class Login : public QWidget, public AGui
 {
     Q_OBJECT
 
 public:
     Login(QString address, int port);
-    void setBackground();
-    void setText();
-    void setLineEdit();
-    void setPushButton();
+    void setBackground() override;
+    void setText() override;
+    void setLineEdit() override;
+    void setPushButton() override;
 
 public slots:
     void on_pushButton_Login_clicked();

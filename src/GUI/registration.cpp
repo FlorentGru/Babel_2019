@@ -60,7 +60,7 @@ void registration::setLineEdit()
     password->move(500, 350);
 }
 
-void registration::setQpushButton()
+void registration::setPushButton()
 {
     registe = new QPushButton("Create", this);
     registe->setFixedWidth(100);

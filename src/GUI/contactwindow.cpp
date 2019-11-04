@@ -18,6 +18,7 @@ contactwindow::contactwindow()
     setBackground();
     setLineEdit();
     setPushButton();
+    setText();
     for (int i = 0; i < 2; i++)
         CreateMenu("Pseudo", i);
     clientudp = new client_udp;
@@ -31,6 +32,11 @@ void contactwindow::setBackground()
 {
     background = new QLabel(this);
     background->setPixmap(QPixmap("../../rsc/Fond_contact.png"));
+}
+
+void contactwindow::setText()
+{
+    
 }
 
 void contactwindow::setLineEdit()

@@ -16,17 +16,18 @@
 #include <string>
 #include <iostream>
 #include "client_tcp.hpp"
+#include "AGui.hpp"
 
-class registration : public QWidget
+class registration : public QWidget, public AGui
 {
     Q_OBJECT
 
 public:
     registration(AClientTcp *ClientTcp);
-    void setBackground();
-    void setText();
-    void setLineEdit();
-    void setQpushButton();
+    void setBackground() override;
+    void setText() override;
+    void setLineEdit() override;
+    void setPushButton() override;
 
 public slots:
     void finish_registration();

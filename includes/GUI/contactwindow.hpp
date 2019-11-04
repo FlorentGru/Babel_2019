@@ -19,16 +19,18 @@
 #include <QGridLayout>
 #include "client_udp.hpp"
 #include "add_contact.hpp"
+#include "AGui.hpp"
 
-class contactwindow : public QWidget
+class contactwindow : public QWidget, public AGui
 {
     Q_OBJECT
 
 public:
     contactwindow();
-    void setBackground();
-    void setLineEdit();
-    void setPushButton();
+    void setBackground() override;
+    void setLineEdit() override;
+    void setPushButton() override;
+    void setText() override;
     void CreateMenu(std::string pseudo , int size);
 
 public slots:
