@@ -14,7 +14,6 @@
 #include <cstdio>
 
 #define RATE            44100
-// #define RATE            48000
 #define FRAMES          512
 
 typedef struct {
@@ -23,13 +22,19 @@ typedef struct {
     std::vector<float> recordedSamples;
 } paData;
 
-class Audio {
+class IAudio {
+public:
+    virtual PaError recordAudio() = 0;
+    virtual PaError playAudio() = 0;
+};
+
+class Audio : public IAudio {
 public:
     Audio();
     ~Audio();
 
-    PaError recordInput();
-    PaError playOutput();
+    PaError recordAudio();
+    PaError playAudio();
     void reset();
     PaError initInput();
     PaError initOutput();

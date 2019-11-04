@@ -18,10 +18,19 @@
 #define SAMPLE_RATE 48000
 #define MAX_SIZE 1000
 
-class Opus {
+class IOpus {
+public:
+    virtual bool encodeData() = 0;
+    virtual bool decodeData() = 0;
+};
+
+class Opus : public IOpus {
 public:
     Opus();
     ~Opus();
+
+    bool encodeData();
+    bool decodeData();
 
     bool createEncoder();
     bool createDecoder();
@@ -31,9 +40,6 @@ public:
     unsigned long getSize() const;
 
     void setAudioInput(std::vector<float> data);
-
-    bool encodeData();
-    bool decodeData();
 
 private:
     OpusEncoder *encode;

@@ -199,7 +199,7 @@ int Audio::playCallback(const void *inputBuffer, void *outputBuffer,
     return finished;
 }
 
-PaError Audio::recordInput()
+PaError Audio::recordAudio()
 {
     this->err = Pa_StartStream(this->streamInput);
     if (this->err != paNoError) {
@@ -224,7 +224,7 @@ PaError Audio::recordInput()
     return (paNoError);
 }
 
-PaError Audio::playOutput()
+PaError Audio::playAudio()
 {
     this->dataOutput.frameIndex = 0;
     if (this->streamInput) {
@@ -283,38 +283,39 @@ void Audio::setOutputData(float *vect, unsigned long size)
         myVect.push_back(vect[i]);
     }
     this->dataOutput.recordedSamples = myVect;
-    // std::cout << "SIZE OUTPUT: " << this->dataOutput.recordedSamples.size() <<  std::endl;
 }
 
+//Some opus code to add in the PortAudio MAIN, doesn't work but i leave it here instead of erasing
+
+    // opus.setAudioInput(port.getInputData());
+    // opus.encodeData();
+    // // std::cout << "CALL DECODE\n";
+    // opus.decodeData();
+    // // std::cout << "DECODE DONE\n";
+    // port.setOutputData(opus.getDecodedData(), opus.getSize());
+    // // if (port.getInputData() == port.getOutputData()) {
+    // //     std::cout << "MEME DATA !!!!" << std::endl;
+    // // } else {
+    // //     std::cout << "PAS LA MEME DATA !!" << std::endl;
+    // // }
+    // // std::cout << "SET DATA FOR PLAYBACK\n";
+
+
 //Main to use PortAudio
-//Some opus functionnalities are in comments because it doesnt work
+int main(void)
+{
+    IAudio *port = new Audio;
+    IOpus *opus = new Opus;
 
-// int main(void)
-// {
-//     Audio port;
-//     Opus opus;
-
-//     if (port.recordInput() != paNoError) {
-//         Pa_Terminate();
-//         std::cout << "Input matter\n";
-//         return (84);
-//     }
-//     // opus.setAudioInput(port.getInputData());
-//     // opus.encodeData();
-//     // // std::cout << "CALL DECODE\n";
-//     // opus.decodeData();
-//     // // std::cout << "DECODE DONE\n";
-//     // port.setOutputData(opus.getDecodedData(), opus.getSize());
-//     // // if (port.getInputData() == port.getOutputData()) {
-//     // //     std::cout << "MEME DATA !!!!" << std::endl;
-//     // // } else {
-//     // //     std::cout << "PAS LA MEME DATA !!" << std::endl;
-//     // // }
-//     // // std::cout << "SET DATA FOR PLAYBACK\n";
-//     if (port.playOutput() != paNoError) {
-//         Pa_Terminate();
-//         std::cout << "Output matter\n";
-//         return (84);
-//     }
-//     return (0);
-// }
+    if (port->recordAudio() != paNoError) {
+        Pa_Terminate();
+        std::cout << "Input matter\n";
+        return (84);
+    }
+    if (port->playAudio() != paNoError) {
+        Pa_Terminate();
+        std::cout << "Output matter\n";
+        return (84);
+    }
+    return (0);
+}

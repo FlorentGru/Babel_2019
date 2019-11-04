@@ -29,16 +29,6 @@ Opus::~Opus()
 bool Opus::encodeData()
 {
     float *myfloat = &this->audioInput[0];
-    // float *myfloat = new float[FRAME_SIZE * 2 * sizeof(float)];
-    // for (size_t i = 0; i < FRAME_SIZE * 2 * sizeof(float); i++) {
-    //     myfloat[i] = this->audioInput.at(i);
-    // }
-
-    //debug
-    // for (int i = 0; i < FRAME_SIZE * 2 *sizeof(float); i++) {
-    //     std::cout << "AudioInput: " << this->audioInput.at(i) << std::endl;
-    //     std::cout << "myfloat: " << myfloat[i] << std::endl;
-    // }
     this->err = opus_encode_float(this->encode, myfloat, FRAME_SIZE, this->dataEncoded, MAX_SIZE);
     if (this->err < 0)
         std::cout << "Can't encode Float" << std::endl;
@@ -50,9 +40,7 @@ bool Opus::decodeData()
 {
     // this->size = FRAME_SIZE * 2 * sizeof(float);
     this->size = this->audioInput.size();
-    // std::cout << "FRAME_SIZE * 2 * sizeof(float): " << FRAME_SIZE * 2 * sizeof(float) << std::endl;
     this->dataDecoded = new float[this->size];
-    // std::cout << "SIZE: " << this->audioInput.size() << std::endl;
     this->err = opus_decode_float(this->decode, this->dataEncoded, MAX_SIZE ,this->dataDecoded, FRAME_SIZE, 0);
     if (this->err < 0) {
         std::cout << "Can't decode Float" << std::endl;
